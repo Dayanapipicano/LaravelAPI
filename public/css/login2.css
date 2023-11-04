@@ -1,0 +1,63 @@
+.body {
+  background: url('background.jpg') no-repeat center center fixed;
+  background-size: cover;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+}
+.login-container {
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 10px;
+  padding: 30px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  max-width: 400px;
+}
+.login-icon {
+  font-size: 60px;
+  color: #007BFF;
+}
+.btn-login {
+  background-color: #007BFF;
+  border: none;
+  transition: background-color 0.3s ease;
+}
+.btn-login:hover {
+  background-color: #0056b3;
+}
+.register-link {
+  color: #007BFF;
+  text-decoration: none;
+  font-weight: bold;
+}
+.register-link:hover {
+  text-decoration: underline;
+}
+.social-buttons {
+  margin-top: 20px;
+}
+.social-button {
+  display: inline-block;
+  margin-right: 10px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  padding: 15px;
+  border-radius: 50%;
+  transition: transform 0.2s ease;
+}
+.social-button:last-child {
+  margin-right: 0;
+}
+.social-button:hover {
+  transform: scale(1.1);
+}
+.social-icon {
+  font-size: 24px;
+  color: #000000;
+}
+.perfume-image {
+  max-width: 100px;
+  border-radius: 50%;
+  border: 2px solid #000000;
+  margin: 0 auto 20px;
+}

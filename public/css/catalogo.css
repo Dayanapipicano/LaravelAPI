@@ -1,0 +1,109 @@
+body {
+    /* justify-content: center;
+    align-items: center; */
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: white;
+  
+       
+        background: url(../IMG/fn12.jpg) center / cover;
+        justify-content: center;
+        align-items: center;
+       
+    
+}
+
+
+.mb-4{
+    color: #fff;
+    font-family: 'Kaushan Script', cursive;
+}
+.navbar {
+    background-color: #090909;
+}
+
+.navbar-brand {
+    color: #fff;
+}
+
+.containers {
+    max-width: 1200px;
+    margin: auto;
+}
+
+
+
+.producto {
+    background-color: #fff;
+    border-radius: 5px;
+    margin: 20px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease-in-out;
+    height: 420px; 
+}
+
+.producto:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+}
+
+
+.producto img {
+    max-width: 100%;
+    height: 150px; 
+    display: block;
+    margin: 0 auto;
+    border-radius: 5px;
+    object-fit: cover; 
+    margin: 0;
+    justify-content: center;
+    align-items: center;
+    
+        
+}
+
+.producto h3 {
+    font-size: 20px;
+    margin-top: 10px;
+}
+
+.producto p {
+    color: #777;
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.precio {
+    font-size: 24px;
+    font-weight: bold;
+    color: #007bff;
+    margin-bottom: 10px;
+}
+
+.btn-comprar {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    text-align: center;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.btn-comprar:hover {
+    background-color: #0056b3;
+}
+
+.icono {
+    font-size: 24px;
+    color: #007bff;
+    margin-right: 5px;
+}
+
+.temporada {
+    font-size: 18px;
+    color: #28a745;
+}

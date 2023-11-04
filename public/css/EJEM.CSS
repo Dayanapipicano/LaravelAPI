@@ -1,0 +1,184 @@
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+body{
+
+padding: 4.4em 0;
+
+}
+body{
+  
+    font-family: 'Kaushan Script', cursive;
+    font-family: 'Libre Baskerville', serif;
+    font-size: 20px;
+    background: #fff;
+
+}
+h1{
+    font-size: 2.5 rem;
+    font-family: 'Kaushan Script', cursive;
+    color: #fff;
+
+}
+h1{
+    text-align: left;
+    font-family: 'Kaushan Script', cursive;
+ 
+   
+}
+   
+   /*navegador*/
+   nav{
+    background: #bdc3c7;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, hsla(210, 29%, 24%, 0.582), hsla(204, 8%, 76%, 0.664));  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, hsla(210, 29%, 24%, 0.603), hsla(204, 8%, 76%, 0.466)); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    overflow: auto;
+    padding-top: 25px;
+    padding-bottom: 25px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+
+
+}
+
+   
+
+   
+   /*navegador*/
+   nav{
+    background: #42275a;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, hsla(309, 21%, 37%, 0.808), hsla(272, 40%, 25%, 0.795));  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, hsla(309, 21%, 37%, 0.651), hsla(272, 40%, 25%, 0.712)); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    
+    overflow: auto;
+    padding-top: 15px;
+    padding-bottom: 25px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+
+
+}
+
+ 
+
+
+
+
+   
+.menu{
+    text-align: right;
+    margin: auto;
+    max-width: 1300px;
+}
+.menu >a{
+    color: #fff;
+    font-weight: 300 ;
+    margin-right: 100px;
+    text-decoration: none;
+    
+}
+
+
+header{
+    width: 100%;
+    height: 100vh;
+    background: #ED213A;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, hsla(6, 66%, 35%, 0.644), hsla(353, 85%, 53%, 0.548)),url(../IMG/imagen2.jpg);  
+    background: linear-gradient(to right, hsla(6, 66%, 35%, 0.555), #ed21396c),url(../IMG/imagen2.jpg); 
+
+    background-size: cover;
+    background-attachment: fixed;
+    position: relative;
+
+ 
+}
+.menu{
+    text-align: right;
+    margin: auto;
+    max-width: 1300px;
+}
+.menu >a{
+    color: #fff;
+    font-weight: 300 ;
+    margin-right: 100px;
+    text-decoration: none;
+    
+}
+
+header{
+    width: 100%;
+    height: 100vh;
+    background: #ED213A;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, hsla(6, 66%, 35%, 0.644), hsla(353, 85%, 53%, 0.548)),url(../img/ima2.jpg);  
+    background: linear-gradient(to right, hsla(6, 66%, 35%, 0.555), #ed21396c),url(../img/ima2.jpg); 
+
+    background-size: cover;
+    background-attachment: fixed;
+    position: relative;
+
+ 
+}
+
+
+/*BUTON*/
+
+ button {
+    background: transparent;
+    position: relative;
+    padding: 5px 15px;
+    
+    align-items: center;
+    font-size: 17px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    border: 1px solid rgb(71, 3, 88);
+    border-radius: 25px;
+    outline: none;
+    overflow: hidden;
+    color: #000;
+    transition: color 0.3s 0.1s ease-out;
+    text-align: center;
+  }
+  
+  button span {
+    margin: 10px;
+  }
+  
+  button::before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    content: '';
+    border-radius: 50%;
+    display: block;
+    width: 20em;
+    height: 20em;
+    left: -5em;
+    text-align: center;
+    transition: box-shadow 0.5s ease-out;
+    z-index: -1;
+  }
+  
+  button:hover {
+    color: rgb(182, 179, 185);
+    border: 1px solid rgb(61, 3, 61);
+  }
+  
+  button:hover::before {
+    box-shadow: inset 0 0 0 10em ;background: #41295a;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #2F0743, #41295a);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #2F0743, #41295a); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    
+    
+  }
+   

@@ -1,0 +1,57 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+}
+
+.container1 {
+    max-width: 800px;
+    margin: 0 auto;
+    margin-top: 30px;
+}
+
+.metodo-pago {
+    border: 1px solid #dddddd;
+    border-radius: 5px;
+    padding: 15px;
+    margin-bottom: 20px;
+    background-color: #efeaea;
+    box-shadow: 0px 0px 5px rgba(207, 6, 6, 0.2);
+}
+
+.metodo-pago img {
+    max-width: 100px;
+    height: auto;
+}
+
+.metodo-pago h3 {
+    font-size: 18px;
+    margin: 10px 0;
+}
+
+.metodo-pago p {
+    color: #777;
+}
+
+.metodo-pago .icono {
+    color: #007bff;
+    font-size: 24px;
+    margin-right: 10px;
+}
+
+.form-check-label {
+    font-weight: bold;
+}
+
+.form-check-input {
+    margin-top: 5px;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
