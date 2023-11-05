@@ -33,7 +33,7 @@ use JetBrains\PhpStorm\Immutable;
 
 Route::get('/',[Controller::class,'index'])->name('inicio');
 
-
+/* 
 //RUTAS DE PRODUCTOS
 Route::post('productos', [ProductController::class,'store'])->name('product.store');
 Route::get('productos/create',[ProductController::class,'create'])->name('product.create');
@@ -53,7 +53,7 @@ Route::get('productos/invierno', [ProductController::class,'invierno'])->name('i
 
 Route::post('temporadas2', [SeasonController::class,'store'])->name('temporadasStore');
 Route::get('temporada/create',[SeasonController::class,'create'])->name('temporada.create');
-Route::get('temporada',[SeasonController::class,'index'])->name('seasons.index');
+Route::get('temporadas',[SeasonController::class,'index'])->name('seasons.index');
 Route::delete('temporadas/{season}', [SeasonController::class, 'destroy'])->name('season.destroy');
 Route::get('temporadas/{season}/edit',[SeasonController::class, 'edit'])->name('season.edit');
 Route::put('temporadas/{season}',[SeasonController::class, 'update'])->name('season.update');
@@ -215,4 +215,4 @@ route::get('logout',[UserController::class,'destroySesion'])->name('loginDestroy
 
 route::get('inicio',[Controller::class,'inicio'])->name('inicio');
 
-route::get('registro2',[Controller::class,'registro2'])->name('registro2');
+route::get('registro2',[Controller::class,'registro2'])->name('registro2'); */

@@ -108,3 +108,84 @@ class ImagesController extends Controller
     return back()->with('success', 'Registro eliminado correctamente');
 }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  /*   public function index()
+    {
+        $season = Season::all();
+        return response()->json($season);
+    } 
+
+   
+
+  
+    public function create()
+    {
+       return view('seasons.create'); 
+
+    }
+    public function store(Request $request)
+    {
+        //
+
+        $temporada = new Season();
+        $temporada->name=$request->name;
+        $temporada -> save();
+
+        $data =[
+            'message' => 'Temporada created succesfully',
+            'temporada' => $temporada
+        ];
+
+        return response()->json($data);
+
+        
+    }
+
+    
+    public function show(Season $season)
+    {
+        return response()->json($season);
+    }
+
+  
+    public function update(Request $request, Season $season)
+    {
+        $season->name = $request->name;
+
+        $season->save();
+
+        $data =[
+            'message' => 'Temporada update succesfully',
+            'temporada' => $season
+        ];
+
+        return response()->json($data);
+    }
+    
+    public function edit(Season $season){
+        
+     }
+
+    public function destroy(Season $season)
+    {
+        $season->delete();
+        $data =[
+            'message' => 'Temporada delete succesfully',
+            'temporada' => $season
+        ];
+
+        return response()->json($data);
+    }  */
