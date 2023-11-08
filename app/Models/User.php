@@ -18,7 +18,13 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
+     
         'name',
+        'lastName',
+        'typeDocument',
+        'document',
+        'phone',
+        'idRol',
         'email',
         'password',
     ];
@@ -49,8 +55,9 @@ class User extends Authenticatable
         return $this->hasMany('App\Models\PQR');
     }
     public function role(){
-        return $this->belongsTo('App\Models\Rol');
+        return $this->belongsTo('App\Models\Rol','idRol');
     }
+
     public function favoritos(){
         return $this->hasMany('App\Models\Favorite');
     }

@@ -6,6 +6,11 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\Rol;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+
+
+
+
 
 class RolController extends Controller
 {
@@ -16,9 +21,9 @@ class RolController extends Controller
      */
     public function index()
     {
-        $rol = Rol::all();
-
-        return view('roles.index',compact('rol'));
+   
+       $rol = Rol::all();
+       return response()->json($rol,Response::HTTP_OK);
     }
 
     /**
@@ -29,12 +34,15 @@ class RolController extends Controller
      */
     public function store(Request $request)
     {
-        $rol = new Rol();
-        $rol->name=$request->name;
-        $rol -> save();
+        
 
+        $request->validate([
+            'name' => 'required|max:255'
+        ]);
 
-        return Redirect()->route('rol.index',$rol);
+        $rol = Rol::create($request->all());
+
+        return response()->json($rol, Response::HTTP_CREATED);
     }
     public function create()
     {
@@ -50,7 +58,8 @@ class RolController extends Controller
      */
     public function show(Rol $rol)
     {
-        return view('roles.show');
+    
+            return response()->json($rol, Response::HTTP_OK);
     }
 
     /**
@@ -62,14 +71,20 @@ class RolController extends Controller
      */
     public function update(Request $request, Rol $rol)
     {
-        $rol->name = $request->name;
+      
+        $request->validate([
+            'name' => 'required|max:225',
+        ]);
 
-        $rol->save();
+        $rol->update($request->all());
 
-        return redirect()->route('rol.index', $rol);
+        return response()->json($rol, Response::HTTP_OK);
     }
+
+
+
     public function edit(Rol $rol){
-        return view('roles.edit',compact('rol'));
+        return response()->json($rol, Response::HTTP_OK);
      }
 
     /**
@@ -80,7 +95,13 @@ class RolController extends Controller
      */
     public function destroy(Rol $rol)
     {
+    
         $rol->delete();
-        return back()->with('succes','Registro eliminado correctamente');
+
+        return response()->json(null, Response::HTTP_NO_CONTENT);
     }
+
+
+    
+    
 }
