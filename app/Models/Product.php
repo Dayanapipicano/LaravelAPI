@@ -12,11 +12,13 @@ class Product extends Model
     protected $fillable = [
         'name',
         'description',
-        'image',
+       /*  'image', */
         'price',
         'concentration',
-        'idSeason',
+        'idSeason', 
     ];
+
+    
     
     public function favoritos(){
         return $this->hasMany('App\Models\Favorite');
@@ -31,10 +33,13 @@ class Product extends Model
     public function comments(){
         return $this->morphMany('App\Models\Comment','comments');
     }
-    public function season()
+    public function temporada()
 {
     return $this->belongsTo('App\Models\Season', 'idSeason');
 }
+
+
+
 
 
 

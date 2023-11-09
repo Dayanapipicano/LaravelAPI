@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Season;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\Response;
 
 
 class ProductController extends Controller
@@ -18,170 +19,105 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $product = Product::all();
+     
 
-    
-        
-        return view('product.index', compact('product'));
-    
-
-        
+        $rol = Product::with('temporada')->get();
+        return response()->json($rol,Response::HTTP_OK);
+ 
     }
 
 
-    public function catalogo()
-    {
-        $product = Product::all();
-        foreach ($product as $products) {
-            if ($products->image) {
-                $products->image = asset('storage/product/' . $products->image);
-            }
-        }
-        return view('catalogo.index', compact('product'));
-    
-    }
-
-
-
-
-
-    public function create()
-    {
-       
-        $seasons = Season::all();
-        return view('product.create',['seasons'=> $seasons]);
-
-    }
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
 
 
-        $product = new Product();
-        $product->name = $request->name;
-        $product->description = $request->description;
-       $product->image = $request->image;
-        $product->price = $request->price;
-        $product->concentration = $request->concentration;
-        $product->idSeason = $request->idSeason;
-
-
-        if ($request->hasFile('image')) {
-            // Generar un nombre de archivo único basado en la marca de tiempo y la extensión original
-            $imageName = time() . '.' . $request->file('image')->getClientOriginalExtension();
+        $request->validate([
+            'name' => 'required|max:255',
+            'description' => 'required|max:255',
+            /* 'image' => 'required|max:255', */
+            'price' => 'required|integer',
+            'concentration' => 'required|integer',
+            'idSeason' => 'required|integer' 
         
-            // Almacenar la imagen en la carpeta 'public/product'
-            $request->file('image')->storeAs('public/product', $imageName);
-        
-            // Asignar el nombre del archivo al atributo 'image' del modelo de producto
-            $product->image = $imageName; // Almacena solo el nombre del archivo
-        }
-        
-        
+        ]);
 
         
 
-        $product -> save();
-
-        return redirect()->route('product.index',$product);
-
-        
+        $product = Product::create($request->all());
+        return response()->json($product, Response::HTTP_CREATED);
+    
     }
-  
-    
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Product  $product
-     * @return \Illuminate\Http\Response
-     */
-  
-     public function show($id)
-     {
-         // Obtener el producto con el ID proporcionado
-         $product = Product::find($id);
- 
-    
-         return view('product.show', compact('product'));
-     }
-    
-      
-/*         return view('product.show', ['product' => $product]); */
-    
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Product  $product
-     * @return \Illuminate\Http\Response
-     */
+    
+    public function show(Product $product)
+    {
+        return response()->json($product, Response::HTTP_OK);
+    }
+ 
+
  
 
      public function update(Request $request, Product $product)
 {
-    // Actualiza los campos del producto
-    $product->name = $request->name;
-    $product->description = $request->description;
-    $product->price = $request->price;
-    $product->concentration = $request->concentration;
-    $product->idSeason = $request->idSeason;
 
-    // Verifica si se ha cargado una nueva imagen
-    if ($request->hasFile('image')) {
-        // Generar un nombre de archivo único basado en la marca de tiempo y la extensión original
-        $imageName = time() . '.' . $request->file('image')->getClientOriginalExtension();
-        
-        // Almacenar la imagen en la carpeta 'public/product'
-        $request->file('image')->storeAs('public/product', $imageName);
-        
-        // Eliminar la imagen anterior (opcional) si lo deseas
-        if ($product->image) {
-            Storage::delete('public/product/' . $product->image);
-        }
+ /*    $id = (int)$request->id; */
 
-        // Asignar el nombre del archivo al atributo 'image' del modelo de producto
-        $product->image = $imageName; // Almacena solo el nombre del archivo
-    }
+    $request->validate([
+        'name' => 'required|max:255',
+        'description' => 'required|max:1000',
+        /* 'image' => 'required|max:255', */
+        'price' => 'required|integer',
+        'concentration' => 'required|integer',
+        'idSeason' => 'required|integer'
+    
+    ]);
 
-    // Guarda el producto actualizado en la base de datos
-    $product->save();
 
-    return redirect()->route('product.index')->with('success', 'Producto actualizado correctamente');
+    $product->update($request->all());
+
+
+    return response()->json($product, Response::HTTP_OK);
+
+    
+ 
 }
 
 
-    public function edit(Product $product){
+    public function edit($id){
 
-        $seasons = Season::all();
+        $product = Product::with('temporada')->find($id);
+        if (!$product) {
+            return response()->json(['error' => 'Usuario no encontrado'], Response::HTTP_NOT_FOUND);
+        }
 
-        return view('product.edit', compact('product', 'seasons'));
+      return response()->json($product,Response::HTTP_OK);
 
        
      }
     
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Product  $product
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Product $product)
     {
         
-        if ($product->image) {
+      /*   if ($product->image) {
             Storage::delete('public/product/' . $product->image);
-        }
+        } */
     
         $product->delete();
         
-        return back()->with('success', 'Registro eliminado correctamente');
+      return response()->json(null,Response::HTTP_NO_CONTENT);
     }
+
+
+
+
+
+
+
+
+
+
+
+
 
     public function primavera()
     {
@@ -218,6 +154,19 @@ class ProductController extends Controller
     }
     
     
+    public function catalogo()
+    {
+        $product = Product::all();
+        foreach ($product as $products) {
+            if ($products->image) {
+                $products->image = asset('storage/product/' . $products->image);
+            }
+        }
+        return view('catalogo.index', compact('product'));
+    
+    }
+
+
 }
 
 

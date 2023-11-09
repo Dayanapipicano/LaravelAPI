@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RolController;
 use App\Http\Controllers\SeasonController;
 use App\Http\Controllers\UserController;
@@ -23,7 +24,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 
 
-//RUTAS Temporada
+//RUTAS TEMPORADA
 
 Route::post('/temporada/store', [SeasonController::class,'store'])->name('season.store');
 Route::get('temporada/create',[SeasonController::class,'create'])->name('season.create');
@@ -57,7 +58,21 @@ Route::put('/usuario/update/{user}',[UserController::class, 'update'])->name('us
 Route::get('/usuario/show',[UserController::class, 'show'])->name('user.show');
 
 Route::put('/usuario/update/perfil/{user}',[UserController::class, 'updatePerfil'])->name('user.updatePerfil');
-
-
-
 Route::get('perfil', [UserController::class, 'shows'])->name('perfil');
+
+
+
+//RUTAS DE PRODUCTOS
+Route::post('/producto/store', [ProductController::class,'store'])->name('product.store');
+Route::get('/producto/create',[ProductController::class,'create'])->name('product.create');
+Route::get('productos',[ProductController::class,'index'])->name('product.index');
+Route::delete('/producto/destroy/{product}',[ProductController::class,'destroy'])->name('product.destroy');
+Route::get('/producto/edit/{id}',[ProductController::class, 'edit'])->name('product.edit');
+Route::put('/producto/update/{product}',[ProductController::class, 'update'])->name('product.update');
+Route::get('/producto/show',[ProductController::class, 'show'])->name('product.show');
+
+route::get('catalogo',[ProductController::class,'catalogo'])->name('catalogo.index');
+Route::get('/producto/primavera', [ProductController::class,'primavera'])->name('primavera');
+Route::get('/producto/verano', [ProductController::class,'verano'])->name('verano');
+Route::get('/producto/otoño', [ProductController::class,'otoño'])->name('otoño');
+Route::get('/producto/invierno', [ProductController::class,'invierno'])->name('invierno');
