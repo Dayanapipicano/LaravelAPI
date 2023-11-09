@@ -157,14 +157,12 @@ class ProductController extends Controller
     public function catalogo()
     {
         $product = Product::all();
-        foreach ($product as $products) {
-            if ($products->image) {
-                $products->image = asset('storage/product/' . $products->image);
-            }
-        }
-        return view('catalogo.index', compact('product'));
+      
+        return $product;
     
     }
+
+  
 
 
 }

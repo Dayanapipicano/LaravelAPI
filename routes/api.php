@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RolController;
 use App\Http\Controllers\SeasonController;
@@ -71,7 +72,18 @@ Route::get('/producto/edit/{id}',[ProductController::class, 'edit'])->name('prod
 Route::put('/producto/update/{product}',[ProductController::class, 'update'])->name('product.update');
 Route::get('/producto/show',[ProductController::class, 'show'])->name('product.show');
 
-route::get('catalogo',[ProductController::class,'catalogo'])->name('catalogo.index');
+
+
+
+Route::post('register', [AuthController::class,'register'])->name('register');
+Route::post('logins', [AuthController::class,'logins'])->name('logins');
+
+
+Route::middleware(['auth:sanctum'])->group(function(){
+    Route::get('logout', [AuthController::class,'logout'])->name('logout');
+    route::get('catalogo',[ProductController::class,'catalogo'])->name('catalogo.index');
+});
+
 Route::get('/producto/primavera', [ProductController::class,'primavera'])->name('primavera');
 Route::get('/producto/verano', [ProductController::class,'verano'])->name('verano');
 Route::get('/producto/otoño', [ProductController::class,'otoño'])->name('otoño');
