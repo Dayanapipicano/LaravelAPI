@@ -81,7 +81,7 @@ Route::post('logins', [AuthController::class,'logins'])->name('logins');
 
 Route::middleware(['auth:sanctum'])->group(function(){
     Route::get('logout', [AuthController::class,'logout'])->name('logout');
-    route::get('catalogo',[ProductController::class,'catalogo'])->name('catalogo.index');
+   /*  route::get('catalogo',[ProductController::class,'catalogo'])->name('catalogo.index'); */
 });
 
 Route::get('/producto/primavera', [ProductController::class,'primavera'])->name('primavera');
