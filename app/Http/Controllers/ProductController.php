@@ -21,8 +21,8 @@ class ProductController extends Controller
     {
      
 
-        $rol = Product::with('temporada')->get();
-        return response()->json($rol,Response::HTTP_OK);
+        $product = Product::with('temporada')->get();
+        return response()->json($product,Response::HTTP_OK);
  
     }
 

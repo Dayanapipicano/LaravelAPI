@@ -14,7 +14,7 @@ class UserFactory extends Factory
      */
     public function definition()
     {
-        return [
+  /*       return [
             'name' => 'inventsmell',
             'lastName' => 'IS',
             'typeDocument' => 'Cedula de ciudadania',
@@ -27,7 +27,7 @@ class UserFactory extends Factory
             'email_verified_at' => now(),
             'password' => '$2y$10$e.485idF7zX1t4OChX5KO.s7zh3Q2n3CdJUlQfO.gQuDRT1elaPdi', 
             'remember_token' => Str::random(10),
-        ];
+        ]; */
     }
 
   

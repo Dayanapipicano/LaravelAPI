@@ -1,17 +1,21 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Laravel\Sanctum\Http\Controllers\AuthenticatedSessionController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Log; 
+
 use \stdClass;
 
 class AuthController extends Controller
 {
+
 
 
     public function register(Request $request)
@@ -20,13 +24,20 @@ class AuthController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8',
+            'lastName' => 'required|string|max:255',
+            'typeDocument' => 'required|string|max:255',
+            'document' => 'required|integer',
+            'phone' => 'required|integer',
+            'idRol' => 'nullable|integer',
         ]);
-
+    
         if ($validator->fails()) {
-            return response()->json($validator->errors());
+            // Log de errores de validación
+            Log::error('Validation failed: ' . json_encode($validator->errors()));
+            return response()->json($validator->errors(), 400);
         }
-
-        
+    
+        // Crea el usuario
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
@@ -35,19 +46,42 @@ class AuthController extends Controller
             'typeDocument' => $request->typeDocument,
             'document' => $request->document,
             'phone' => $request->phone,
-            'idRol' => $request->idRol,
-        ]); 
-
+        ]);
+    
+        // Asigna el rol al usuario
+        $requestedRole = $request->idRol;
+        $defaultRole = Role::findByName('cliente');
+    
+        if (!$requestedRole && !$defaultRole) {
+            // Log de error si no se proporciona idRol y no se encuentra el rol predeterminado
+            Log::error('No role provided and default role not found.');
+            return response()->json(['error' => 'No role provided and default role not found.'], 400);
+        }
+    
+        $roleToAssign = $requestedRole ? Role::find($requestedRole) : $defaultRole;
+    
+        if (!$roleToAssign) {
+            // Log de error si no se encuentra el rol proporcionado o el predeterminado
+            Log::error('Role not found: ' . $requestedRole);
+            return response()->json(['error' => 'Role not found: ' . $requestedRole], 400);
+        }
+    
+        $user->assignRole($roleToAssign);
+    
+        // Genera el token de acceso
         $token = $user->createToken('auth_token')->plainTextToken;
-
+    
+        // Log de éxito
+        Log::info('User registered successfully: ' . json_encode($user));
+    
         return response()->json([
             'data' => $user,
             'access_token' => $token,
             'token_type' => 'Bearer',
         ]);
     }
-
-
+    
+    
     public function logins(Request $request)
     {
         if (!Auth::attempt($request->only('email', 'password'))) {
@@ -63,7 +97,23 @@ class AuthController extends Controller
             'accessToken' => $token,
             'token_type' => 'Bearer',
             'user' => $user,
-        ]);
+        ]); 
+
+       /*  $response = [
+            'message' => 'Hi ' . $user->name,
+            'accessToken' => $token,
+            'token_type' => 'Bearer',
+            'user' => $user,
+        ];
+    
+        // Redirige según el rol
+        if ($user->hasRole('admin')) {
+            $response['redirect'] = '/admin-dashboard'; // ajusta la ruta según tu estructura
+        } else {
+            $response['redirect'] = '/user-dashboard'; // ajusta la ruta según tu estructura
+        }
+    
+        return response()->json($response); */
     }
 
     public function logout(){

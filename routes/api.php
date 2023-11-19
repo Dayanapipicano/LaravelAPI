@@ -3,10 +3,13 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RolController;
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SeasonController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Laravel\Sanctum\Http\Controllers\AuthenticatedSessionController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -40,7 +43,7 @@ Route::get('/temporada/show/{season}',[SeasonController::class, 'show'])->name('
 
 Route::post('/rol/store', [RolController::class,'store'])->name('rol.store');
 Route::get('/rol/create',[RolController::class,'create'])->name('rol.create');
-Route::get('/roles',[RolController::class,'index'])->name('rol.index');
+Route::get('/roles',[RoleController::class,'index'])->name('rol.index');
 Route::delete('/rol/destroy/{rol}', [RolController::class, 'destroy'])->name('rol.destroy');
 Route::get('/rol/edit/{rol}',[RolController::class, 'edit'])->name('rol.edit');
 Route::put('/rol/update/{rol}',[RolController::class, 'update'])->name('rol.update');
@@ -79,10 +82,18 @@ Route::post('register', [AuthController::class,'register'])->name('register');
 Route::post('logins', [AuthController::class,'logins'])->name('logins');
 
 
-Route::middleware(['auth:sanctum'])->group(function(){
+/* Route::middleware(['auth:sanctum'])->group(function(){
     Route::get('logout', [AuthController::class,'logout'])->name('logout');
-   /*  route::get('catalogo',[ProductController::class,'catalogo'])->name('catalogo.index'); */
-});
+     route::get('catalogo',[ProductController::class,'catalogo'])->name('catalogo.index'); 
+}); */
+
+ Route::middleware(['auth:sanctum'])->group(function(){
+    Route::get('logout', [AuthController::class,'logout'])->name('logout');
+     
+}); 
+
+
+
 
 Route::get('/producto/primavera', [ProductController::class,'primavera'])->name('primavera');
 Route::get('/producto/verano', [ProductController::class,'verano'])->name('verano');

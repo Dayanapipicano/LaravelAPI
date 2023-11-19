@@ -15,17 +15,14 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-
     public function index()
     {
-
-            $users = User::with('role')->get(); // Esto carga la relación "rol"
-            return response()->json($users, Response::HTTP_OK);
-        
-        
+        $users = User::with('roles')->get(); // Esto carga la relación "roles"
+        return response()->json($users, Response::HTTP_OK);
     }
+    
 
-
+/* 
     public function store(Request $request)
     {
         $request->validate([
@@ -47,7 +44,7 @@ class UserController extends Controller
 
         return response()->json($user, Response::HTTP_CREATED);
     }
-
+ */
 
 
 
