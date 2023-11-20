@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-use Laravel\Sanctum\Http\Controllers\AuthenticatedSessionController;
+
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\User;
@@ -9,13 +9,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Spatie\Permission\Models\Role;
-use Illuminate\Support\Facades\Log; 
+use Illuminate\Support\Facades\Log;
 
 use \stdClass;
 
 class AuthController extends Controller
 {
-
 
 
     public function register(Request $request)
@@ -34,7 +33,7 @@ class AuthController extends Controller
         if ($validator->fails()) {
             // Log de errores de validación
             Log::error('Validation failed: ' . json_encode($validator->errors()));
-            return response()->json($validator->errors(), 400);
+            return response()->json($validator->errors());
         }
     
         // Crea el usuario
@@ -80,51 +79,53 @@ class AuthController extends Controller
             'token_type' => 'Bearer',
         ]);
     }
-    
-    
     public function logins(Request $request)
     {
         if (!Auth::attempt($request->only('email', 'password'))) {
             return response()->json(['message' => 'Unauthorized'], 401);
         }
     
-        $user = User::where('email', $request['email'])->firstOrFail();
+        $user = auth()->user();
+        $user->load('roles'); // Cargar roles
     
-        $token = $user->createToken('auth_token')->plainTextToken;
+        // Asignar roles
+        $userRoles = $user->roles->pluck('name')->toArray();
+        $user->assignRole($userRoles);
     
-        return response()->json([
+        // Asignar permisos basados en los roles
+        $permissions = Role::whereIn('name', $userRoles)->get()->flatMap->permissions->pluck('name')->toArray();
+        $user->givePermissionTo($permissions);
+    
+        // Crear el token con roles
+        $token = $user->createToken('auth_token', ['roles' => $userRoles])->plainTextToken;
+    
+        $response = [
             'message' => 'Hi ' . $user->name,
             'accessToken' => $token,
             'token_type' => 'Bearer',
             'user' => $user,
-        ]); 
-
-       /*  $response = [
-            'message' => 'Hi ' . $user->name,
-            'accessToken' => $token,
-            'token_type' => 'Bearer',
-            'user' => $user,
+            'roles' => $userRoles,
+            'permissions' => $permissions,
         ];
     
-        // Redirige según el rol
-        if ($user->hasRole('admin')) {
-            $response['redirect'] = '/admin-dashboard'; // ajusta la ruta según tu estructura
-        } else {
-            $response['redirect'] = '/user-dashboard'; // ajusta la ruta según tu estructura
-        }
-    
-        return response()->json($response); */
+        // No redireccionar, solo responder con JSON
+        return response()->json($response);
     }
+    
+    
 
-    public function logout(){
+    
+    
+    
+    
+
+    public function logout()
+    {
 
         auth()->user()->tokens()->delete();
 
-        return[
+        return [
             'message' => 'You have successfully logged out and the token was succesfully deleted'
         ];
-
     }
-    
-
 }

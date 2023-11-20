@@ -21,10 +21,20 @@ class AuthServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot()
+   /*  public function boot()
     {
         $this->registerPolicies();
 
         //
+    } */
+
+    public function boot()
+    {
+        $this->registerPolicies();
+
+        // Configura el modelo de usuario para Spatie Permission
+        Gate::before(function ($user, $ability) {
+            return $user->hasRole('admin') ? true : null;
+        });
     }
 }

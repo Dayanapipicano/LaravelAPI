@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Models\Rol;
+
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,9 +17,16 @@ class UserController extends Controller
 {
     public function index()
     {
-        $users = User::with('roles')->get(); // Esto carga la relación "roles"
-        return response()->json($users, Response::HTTP_OK);
+        $user = auth()->user();
+    
+        if ($user && $user->hasRole('admin')) {
+            $users = User::with('roles')->get();
+            return response()->json($users, Response::HTTP_OK);
+        } else {
+            return response()->json(['error' => 'No tienes permisos para acceder a estos datos.'], 403);
+        }
     }
+    
     
 
 /* 

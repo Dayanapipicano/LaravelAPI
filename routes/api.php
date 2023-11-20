@@ -40,22 +40,22 @@ Route::get('/temporada/show/{season}',[SeasonController::class, 'show'])->name('
 
 
 //RUTAS ROL
-
+/* 
 Route::post('/rol/store', [RolController::class,'store'])->name('rol.store');
-Route::get('/rol/create',[RolController::class,'create'])->name('rol.create');
+Route::get('/rol/create',[RolController::class,'create'])->name('rol.create'); */
 Route::get('/roles',[RoleController::class,'index'])->name('rol.index');
-Route::delete('/rol/destroy/{rol}', [RolController::class, 'destroy'])->name('rol.destroy');
+/* Route::delete('/rol/destroy/{rol}', [RolController::class, 'destroy'])->name('rol.destroy');
 Route::get('/rol/edit/{rol}',[RolController::class, 'edit'])->name('rol.edit');
 Route::put('/rol/update/{rol}',[RolController::class, 'update'])->name('rol.update');
 Route::get('/rol/show',[RolController::class, 'show'])->name('rol.show');
-
+ */
 
 //RUTAS USUARIO
 
 
 Route::post('/usuario/store',[UserController::class,'store'])->name('user.store');
 Route::get('/usuario/create',[UserController::class, 'create'])->name('user.create');
-Route::get('usuarios',[UserController::class, 'index'])->name('user.index');
+/* Route::get('usuarios',[UserController::class, 'index'])->name('user.index'); */
 Route::delete('/usuario/destroy/{user}', [UserController::class, 'destroy'])->name('user.destroy');
 Route::get('/usuario/edit/{id}',[UserController::class, 'edit'])->name('user.edit');
 Route::put('/usuario/update/{user}',[UserController::class, 'update'])->name('user.update');
@@ -69,7 +69,7 @@ Route::get('perfil', [UserController::class, 'shows'])->name('perfil');
 //RUTAS DE PRODUCTOS
 Route::post('/producto/store', [ProductController::class,'store'])->name('product.store');
 Route::get('/producto/create',[ProductController::class,'create'])->name('product.create');
-Route::get('productos',[ProductController::class,'index'])->name('product.index');
+/* Route::get('productos',[ProductController::class,'index'])->name('product.index'); */
 Route::delete('/producto/destroy/{product}',[ProductController::class,'destroy'])->name('product.destroy');
 Route::get('/producto/edit/{id}',[ProductController::class, 'edit'])->name('product.edit');
 Route::put('/producto/update/{product}',[ProductController::class, 'update'])->name('product.update');
@@ -91,6 +91,18 @@ Route::post('logins', [AuthController::class,'logins'])->name('logins');
     Route::get('logout', [AuthController::class,'logout'])->name('logout');
      
 }); 
+
+
+
+Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
+    // Rutas para roles de admin
+    Route::get('productos', [ProductController::class, 'index'])->name('product.index');
+    Route::get('usuarios', [UserController::class, 'index'])->name('user.index');
+    // Otras rutas para administradores
+});
+
+
+
 
 
 

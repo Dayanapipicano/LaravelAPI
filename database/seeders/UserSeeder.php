@@ -10,7 +10,7 @@ class UserSeeder extends Seeder
 {
     public function run()
     {
-        // Roles
+      /*   // Roles
         $adminRole = Role::create(['name' => 'admin']);
         $clienteRole = Role::create(['name' => 'cliente']);
     
@@ -19,7 +19,7 @@ class UserSeeder extends Seeder
         // Agrega más permisos según tus necesidades
     
         // Asigna permisos a roles
-        $adminRole->givePermissionTo('editar usuarios');
+        $adminRole->givePermissionTo('editar usuarios'); */
     }
 }
 

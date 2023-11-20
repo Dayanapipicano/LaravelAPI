@@ -8,8 +8,12 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Database\Eloquent\Model;
+
 use Spatie\Permission\Models\Role as SpatieRole;
 use Illuminate\Support\Str;
+
+
 
 class User extends Authenticatable
 {
@@ -33,6 +37,11 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+    public function hasAnyRole($roles)
+    {
+        return $this->hasAnyRole($roles);
+    }
+    
 
     public function shoppingCarts()
     {
@@ -43,6 +52,8 @@ class User extends Authenticatable
     {
         return $this->hasMany(PQR::class);
     }
+
+ 
 
     public function favoritos()
     {
@@ -65,13 +76,10 @@ class User extends Authenticatable
     }
 
     protected function hasPermissionThroughRole($permission)
-    {
-        foreach ($this->roles as $role) {
-            if ($role->hasPermissionTo($permission)) {
-                return true;
-            }
-        }
+{
+    return $this->hasAnyPermission([$permission]);
+}
 
-        return false;
-    }
+
+  
 }
