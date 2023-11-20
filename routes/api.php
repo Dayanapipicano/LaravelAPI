@@ -94,12 +94,13 @@ Route::post('logins', [AuthController::class,'logins'])->name('logins');
 
 
 
-Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
+ Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
     // Rutas para roles de admin
    
     Route::get('usuarios', [UserController::class, 'index'])->name('user.index');
     // Otras rutas para administradores
-});
+}); 
+
 
 Route::get('/productos', [ProductController::class, 'index'])->name('product.index');
 
