@@ -13,7 +13,7 @@ class RoleMiddleware
     {
         $authGuard = Auth::guard($guard);
         $user = $authGuard->user();
-    
+       
         if (!in_array($role, $user->getRoleNames()->toArray())) {
             throw UnauthorizedException::forRoles([$role]);
         }

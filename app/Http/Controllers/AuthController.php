@@ -46,30 +46,19 @@ class AuthController extends Controller
             'document' => $request->document,
             'phone' => $request->phone,
         ]);
-    
-        // Asigna el rol al usuario
         $requestedRole = $request->idRol;
         $defaultRole = Role::findByName('cliente');
     
-        if (!$requestedRole && !$defaultRole) {
-            // Log de error si no se proporciona idRol y no se encuentra el rol predeterminado
-            Log::error('No role provided and default role not found.');
-            return response()->json(['error' => 'No role provided and default role not found.'], 400);
-        }
-    
         $roleToAssign = $requestedRole ? Role::find($requestedRole) : $defaultRole;
-    
-        if (!$roleToAssign) {
-            // Log de error si no se encuentra el rol proporcionado o el predeterminado
-            Log::error('Role not found: ' . $requestedRole);
-            return response()->json(['error' => 'Role not found: ' . $requestedRole], 400);
-        }
     
         $user->assignRole($roleToAssign);
     
+        // Asigna permisos basados en el rol
+        $permissions = $roleToAssign->permissions->pluck('name')->toArray();
+        $user->givePermissionTo($permissions);
+    
         // Genera el token de acceso
         $token = $user->createToken('auth_token')->plainTextToken;
-    
         // Log de éxito
         Log::info('User registered successfully: ' . json_encode($user));
     
@@ -86,11 +75,12 @@ class AuthController extends Controller
         }
     
         $user = auth()->user();
-        $user->load('roles'); // Cargar roles
+    
+        // Cargar solo los nombres de los roles
+        $user->load('roles:name');
     
         // Asignar roles
         $userRoles = $user->roles->pluck('name')->toArray();
-        $user->assignRole($userRoles);
     
         // Asignar permisos basados en los roles
         $permissions = Role::whereIn('name', $userRoles)->get()->flatMap->permissions->pluck('name')->toArray();
