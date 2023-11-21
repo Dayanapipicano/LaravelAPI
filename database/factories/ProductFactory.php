@@ -22,7 +22,7 @@ class ProductFactory extends Factory
             'description' => substr($this->faker->paragraph, 0, 100), // Limita la descripción a 255 caracteres
             'idSeason'=> 1 ,
 
-            //"image"=>$this->faker->randomElement(['img13e2131e2qr1132','pngewf34493r3w9']),
+            /* "image"=>$this->faker->randomElement(['img13e2131e2qr1132','pngewf34493r3w9']), */
             'concentration' => $this->faker->randomFloat(2, 10, 1000), 
             'price' => $this->faker->randomFloat(2, 10, 1000), // Precio aleatorio con 2 decimales entre 10 y 1000
             
