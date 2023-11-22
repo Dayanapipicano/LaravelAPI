@@ -101,8 +101,8 @@ Route::post('logins', [AuthController::class,'logins'])->name('logins');
     // Otras rutas para administradores
 }); 
 
-Route::get('/usuarios', [UserController::class, 'index'])->name('user.index');
-Route::get('/productos', [ProductController::class, 'index'])->name('product.index');
+Route::get('usuarios', [UserController::class, 'index'])->name('user.index');
+Route::get('productos', [ProductController::class, 'index'])->name('product.index');
 
 
 

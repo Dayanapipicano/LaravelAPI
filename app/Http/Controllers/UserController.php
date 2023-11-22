@@ -17,14 +17,19 @@ class UserController extends Controller
 {
     public function index()
     {
-        $user = auth()->user();
+
+        $users = User::with('roles')->get();
+        return response()->json($users, Response::HTTP_OK);
+
+        //NO VAYAS A BORRAR QUE SON AVANCES DE PERMISOS POR SI DEPRONTO ALCANZAMOS
+      /*   $user = auth()->user();
     
         if ($user && $user->hasRole('admin')) {
             $users = User::with('roles')->get();
             return response()->json($users, Response::HTTP_OK);
         } else {
             return response()->json(['error' => 'No tienes permisos para acceder a estos datos.'], 403);
-        }
+        } */
     }
     
     

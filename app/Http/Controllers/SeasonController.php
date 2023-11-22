@@ -13,7 +13,7 @@ class SeasonController extends Controller
    
     public function index()
     {
-        $seasons = Season::all(); // Paginación para evitar respuestas largas
+        $seasons = Season::all(); 
         return response()->json($seasons, Response::HTTP_OK);
     }
 
