@@ -180,12 +180,18 @@ class AuthController extends Controller
 
     
     //TE MANDA LOS DATOS SOLO DEL USUSARIO CON EL QUE INICIO SESION
-
     public function getPerfil()
     {
         $user = auth()->user();
+        $token = $user->createToken('auth_token')->plainTextToken;
+    
+        // Log o imprime la información del usuario y el token para depuración
+        Log::info('User profile information: ' . json_encode($user));
+        Log::info('Token in getPerfil: ' . $token);
+    
         return response()->json(['user' => $user]);
     }
+    
     
     
 }
