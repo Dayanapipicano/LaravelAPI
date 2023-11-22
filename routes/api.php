@@ -61,8 +61,7 @@ Route::get('/usuario/edit/{id}',[UserController::class, 'edit'])->name('user.edi
 Route::put('/usuario/update/{user}',[UserController::class, 'update'])->name('user.update');
 Route::get('/usuario/show',[UserController::class, 'show'])->name('user.show');
 
-Route::put('/usuario/update/perfil/{user}',[UserController::class, 'updatePerfil'])->name('user.updatePerfil');
-Route::get('perfil', [UserController::class, 'shows'])->name('perfil');
+
 
 
 
@@ -88,9 +87,15 @@ Route::post('logins', [AuthController::class,'logins'])->name('logins');
 }); */
 
  Route::middleware(['auth:sanctum'])->group(function(){
+    Route::put('/usuario/update',[AuthController::class, 'updateProfile'])->name('user.update');
+    Route::get('/perfil', [AuthController::class,'getPerfil'])->name('perfil');
     Route::get('logout', [AuthController::class,'logout'])->name('logout');
+ 
      
 }); 
+
+
+
 
 
 

@@ -10,13 +10,19 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
-
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 
 
 class UserController extends Controller
 {
     public function index()
     {
+
+        //---DEL LADO DEL ADMIN O CRUD
+
+
+        //TE MANDA TODOS LOS USUSARIOS DE BASE DE DATOS
 
         $users = User::with('roles')->get();
         return response()->json($users, Response::HTTP_OK);
@@ -33,34 +39,6 @@ class UserController extends Controller
     }
     
     
-    
-    
-
-/* 
-    public function store(Request $request)
-    {
-        $request->validate([
-            'name' => 'required|max:255',
-            'lastName' => 'required|max:255',
-            'typeDocument' => 'required|max:255',
-            'document' => 'required|integer',
-            'phone' => 'required|integer',
-            'idRol' => 'required|integer',
-            'email' => 'required|email|unique:users|max:255',
-            'password' => 'required|max:255',
-        ]);
-
-
-        $userData = $request->all();
-        $userData['password'] = Hash::make($request->input('password'));
-
-        $user = User::create($userData);
-
-        return response()->json($user, Response::HTTP_CREATED);
-    }
- */
-
-
 
     public function update(Request $request, User $user)
     {
@@ -106,6 +84,7 @@ class UserController extends Controller
 
 
 
+
     public function destroy(User $user)
     {
         $user->delete();
@@ -114,34 +93,7 @@ class UserController extends Controller
     }
 
 
-
-    public function updatePerfil(Request $request, User $user)
-    {
-        $user->name = $request->name;
-        $user->lastName = $request->lastName;
-        $user->typeDocument = $request->typeDocument;
-        $user->document = $request->document;
-        $user->email = $request->email;
-        $user->password = $request->password;
-        // Verifica si se ha cargado una nueva imagen
-        if ($request->hasFile('image')) {
-            // Generar un nombre de archivo único basado en la marca de tiempo y la extensión original
-            $imageName = time() . '.' . $request->file('image')->getClientOriginalExtension();
-
-            // Almacenar la imagen en la carpeta 'public/product'
-            $request->file('image')->storeAs('public/product', $imageName);
-
-            // Eliminar la imagen anterior (opcional) si lo deseas
-            if ($user->image) {
-                Storage::delete('public/product/' . $user->image);
-            }
-
-            // Asignar el nombre del archivo al atributo 'image' del modelo de producto
-            $user->image = $imageName; // Almacena solo el nombre del archivo
-        }
-
-        $user->save();
-
-        return redirect()->route('perfil', $user);
-    }
+   
+    
+    
 }
