@@ -55,21 +55,23 @@ Route::get('/rol/show',[RolController::class, 'show'])->name('rol.show');
 
 Route::post('/usuario/store',[UserController::class,'store'])->name('user.store');
 Route::get('/usuario/create',[UserController::class, 'create'])->name('user.create');
-/* Route::get('usuarios',[UserController::class, 'index'])->name('user.index'); */
+Route::get('usuarios', [UserController::class, 'index'])->name('user.index');
 Route::delete('/usuario/destroy/{user}', [UserController::class, 'destroy'])->name('user.destroy');
 Route::get('/usuario/edit/{id}',[UserController::class, 'edit'])->name('user.edit');
 Route::put('/usuario/update/{user}',[UserController::class, 'update'])->name('user.update');
 Route::get('/usuario/show',[UserController::class, 'show'])->name('user.show');
 
-Route::put('/usuario/update/perfil/{user}',[UserController::class, 'updatePerfil'])->name('user.updatePerfil');
-Route::get('perfil', [UserController::class, 'shows'])->name('perfil');
+Route::post('register', [AuthController::class,'register'])->name('register');
+Route::post('logins', [AuthController::class,'logins'])->name('logins');
+
+
 
 
 
 //RUTAS DE PRODUCTOS
 Route::post('/producto/store', [ProductController::class,'store'])->name('product.store');
 Route::get('/producto/create',[ProductController::class,'create'])->name('product.create');
-/* Route::get('productos',[ProductController::class,'index'])->name('product.index'); */
+Route::get('productos',[ProductController::class,'index'])->name('product.index'); 
 Route::delete('/producto/destroy/{product}',[ProductController::class,'destroy'])->name('product.destroy');
 Route::get('/producto/edit/{id}',[ProductController::class, 'edit'])->name('product.edit');
 Route::put('/producto/update/{product}',[ProductController::class, 'update'])->name('product.update');
@@ -78,33 +80,30 @@ Route::get('/producto/show',[ProductController::class, 'show'])->name('product.s
 
 
 
-Route::post('register', [AuthController::class,'register'])->name('register');
-Route::post('logins', [AuthController::class,'logins'])->name('logins');
 
 
-/* Route::middleware(['auth:sanctum'])->group(function(){
-    Route::get('logout', [AuthController::class,'logout'])->name('logout');
-     route::get('catalogo',[ProductController::class,'catalogo'])->name('catalogo.index'); 
-}); */
+
+
+
+//AUTHENTICACIONES
 
  Route::middleware(['auth:sanctum'])->group(function(){
+    Route::put('/usuario/update',[AuthController::class, 'updateProfile'])->name('user.update');
+    Route::get('perfil', [AuthController::class,'getPerfil'])->name('perfil');
     Route::get('logout', [AuthController::class,'logout'])->name('logout');
+ 
      
 }); 
 
 
 
  Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
-    // Rutas para roles de admin
     
-    // Otras rutas para administradores
 }); 
 
-Route::get('/usuarios', [UserController::class, 'index'])->name('user.index');
-Route::get('/productos', [ProductController::class, 'index'])->name('product.index');
 
 
-
+//TEMPORADAS
 
 
 Route::get('/producto/primavera', [ProductController::class,'primavera'])->name('primavera');

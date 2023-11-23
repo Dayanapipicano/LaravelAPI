@@ -16,6 +16,9 @@ use \stdClass;
 class AuthController extends Controller
 {
 
+      //------DEL LADO DEL CLIENTE-----
+
+      //REGISTRO DE USUSARIO 
 
     public function register(Request $request)
     {
@@ -68,6 +71,10 @@ class AuthController extends Controller
             'token_type' => 'Bearer',
         ]);
     }
+
+
+    //LOGIN 
+
     public function logins(Request $request)
     {
         if (!Auth::attempt($request->only('email', 'password'))) {
@@ -104,10 +111,8 @@ class AuthController extends Controller
     
     
 
-    
-    
-    
-    
+    //CIERRE DE SESION
+ 
 
     public function logout()
     {
@@ -118,4 +123,75 @@ class AuthController extends Controller
             'message' => 'You have successfully logged out and the token was succesfully deleted'
         ];
     }
+
+
+   
+
+
+    //LOGICA QUE ACTUALIZA PERFIL
+
+    public function updateProfile(Request $request)
+    {
+        $user = auth()->user();
+    
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'lastName' => 'required|string|max:255',
+            'typeDocument' => 'required|string|max:255',
+            'document' => 'required|integer',
+            'phone' => 'required|integer',
+            'current_password' => 'sometimes|required|string|min:8',
+            'new_password' => $request->filled('current_password') ? 'required|string|min:8|confirmed' : '',
+        ]);
+        
+        
+    
+        if ($validator->fails()) {
+            Log::error('Validation failed during profile update: ' . json_encode($validator->errors()));
+            return response()->json($validator->errors(), 422);
+        }
+    
+        // Verificar la contraseña actual si se proporciona
+        if ($request->filled('current_password')) {
+            if (!Hash::check($request->current_password, $user->password)) {
+                return response()->json(['message' => 'La contraseña actual no es válida.'], 422);
+            }
+    
+            // Actualizar la contraseña si se proporciona una nueva
+            if ($request->filled('new_password')) {
+                $user->update(['password' => Hash::make($request->new_password)]);
+            }
+        }
+    
+        // Actualizar otros detalles del perfil
+        $user->update([
+            'name' => $request->name,
+            'lastName' => $request->lastName,
+            'typeDocument' => $request->typeDocument,
+            'document' => $request->document,
+            'phone' => $request->phone,
+        ]);
+    
+        // Log de éxito
+        Log::info('User profile updated successfully: ' . json_encode($user));
+    
+        return response()->json(['message' => 'Perfil actualizado con éxito', 'user' => $user]);
+    }
+
+    
+    //TE MANDA LOS DATOS SOLO DEL USUSARIO CON EL QUE INICIO SESION
+    public function getPerfil()
+    {
+        $user = auth()->user();
+        $token = $user->createToken('auth_token')->plainTextToken;
+    
+        // Log o imprime la información del usuario y el token para depuración
+        Log::info('User profile information: ' . json_encode($user));
+        Log::info('Token in getPerfil: ' . $token);
+    
+        return response()->json(['user' => $user]);
+    }
+    
+    
+    
 }
