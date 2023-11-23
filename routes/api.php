@@ -96,7 +96,6 @@ Route::post('logins', [AuthController::class,'logins'])->name('logins');
 
  Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
     // Rutas para roles de admin
-   
     
     // Otras rutas para administradores
 }); 
