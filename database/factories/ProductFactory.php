@@ -29,8 +29,12 @@ class ProductFactory extends Factory
                     mkdir($productDirectory, 0755, true);
                 }
         
-                // Generar un nombre de archivo único basado en la marca de tiempo y la extensión original
-                $imageName = time() . '.' . $this->faker->fileExtension;
+                // Obtener una extensión aleatoria de las permitidas
+                $allowedExtensions = ['jpeg', 'png', 'jpg'];
+                $extension = $this->faker->randomElement($allowedExtensions);
+        
+                // Generar un nombre de archivo único basado en la marca de tiempo y la extensión permitida
+                $imageName = time() . '.' . $extension;
         
                 // Utilizar el método storeAs para almacenar la imagen en la carpeta product
                 $this->faker->image($productDirectory, 400, 300, null, false);
@@ -39,5 +43,6 @@ class ProductFactory extends Factory
                 return $imageName;
             },
         ];
+        
     }
 }
