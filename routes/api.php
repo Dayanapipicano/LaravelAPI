@@ -58,7 +58,7 @@ Route::get('/usuario/create',[UserController::class, 'create'])->name('user.crea
 Route::get('usuarios', [UserController::class, 'index'])->name('user.index');
 Route::delete('/usuario/destroy/{user}', [UserController::class, 'destroy'])->name('user.destroy');
 Route::get('/usuario/edit/{id}',[UserController::class, 'edit'])->name('user.edit');
-Route::put('/usuario/update/{user}',[UserController::class, 'update'])->name('user.update');
+//Route::put('/usuario/update/{user}',[UserController::class, 'update'])->name('user.update');
 Route::get('/usuario/show',[UserController::class, 'show'])->name('user.show');
 
 Route::post('register', [AuthController::class,'register'])->name('register');
