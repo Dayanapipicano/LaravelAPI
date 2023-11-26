@@ -73,7 +73,7 @@ Route::get('/producto/create',[ProductController::class,'create'])->name('produc
 Route::get('productos',[ProductController::class,'index'])->name('product.index'); 
 Route::delete('/producto/destroy/{product}',[ProductController::class,'destroy'])->name('product.destroy');
 Route::get('/producto/edit/{id}',[ProductController::class, 'edit'])->name('product.edit');
-Route::put('/producto/update/{product}',[ProductController::class, 'update'])->name('product.update');
+Route::post('/producto/update/{product}',[ProductController::class, 'update'])->name('product.update');
 Route::get('/producto/show/{product}',[ProductController::class, 'show'])->name('product.show');
 
 

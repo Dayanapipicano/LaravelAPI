@@ -90,52 +90,38 @@ class ProductController extends Controller
     {
         $request->validate([
             'name' => 'required|max:255',
-            'description' => 'required|max:1000',
+            'description' => 'required|max:255',
+            'image' => 'image|mimes:jpeg,png,jpg,gif',
             'price' => 'required|integer',
             'concentration' => 'required|integer',
-            'idSeason' => 'required|integer',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif',
+            'idSeason' => 'required|integer'
         ]);
-
+    
         try {
-            $response = null; // Definir la variable $response antes del bloque try
 
+         
+            // Eliminar la imagen antigua si se proporciona una nueva
             if ($request->hasFile('image')) {
+                Storage::delete('public/product/' . $product->image);
+    
                 $imageFile = $request->file('image');
-
-                // Generar un nombre de archivo único basado en la marca de tiempo y la extensión original
                 $imageName = time() . '.' . $imageFile->getClientOriginalExtension();
-
-                // Almacenar la nueva imagen en la carpeta 'public/product'
                 $imageFile->storeAs('public/product', $imageName);
-
-                // Eliminar la imagen anterior si existe
-                if ($product->image) {
-                    Storage::delete('public/product/' . $product->image);
-                }
-
-                // Actualizar el modelo con la nueva información, incluido el nombre de la nueva imagen
-                $product->update($request->except('image') + ['image' => $imageName]);
-
-                // Asignar el nombre del archivo al atributo 'image' del modelo de producto (para la respuesta JSON)
+    
                 $product->image = $imageName;
-
-                // Devolver la respuesta con la información actualizada
-                $response = response()->json($product, Response::HTTP_OK);
-            } else {
-                // Si no se proporciona una nueva imagen, simplemente actualizar el modelo con la información existente
-                $product->update($request->except('image'));
-
-                // Devolver la respuesta con la información actualizada
-                $response = response()->json($product, Response::HTTP_OK);
             }
+    
+            // Actualizar los demás campos del producto
+            $product->update($request->except('image'));
+    
+            // Devolver la respuesta con el producto actualizado
+            return response()->json($product, Response::HTTP_OK);
         } catch (\Exception $e) {
-            // Capturar cualquier excepción y devolver un mensaje de error
-            $response = response()->json(['error' => 'Error al actualizar el producto.'], Response::HTTP_INTERNAL_SERVER_ERROR);
+            return response()->json(['error' => 'Error al actualizar el producto.'], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
-
-        return $response; // Devolver la respuesta después del bloque try
     }
+    
+
 
 
     public function edit($id)
@@ -181,7 +167,7 @@ class ProductController extends Controller
 
 
 
-//FILTRO TEMPORADA
+    //FILTRO TEMPORADA
 
     public function productTemporada($seasonId)
     {
@@ -189,21 +175,20 @@ class ProductController extends Controller
         if (!$seasonId || !Season::find($seasonId)) {
             return response()->json(['error' => 'Season not found'], 404);
         }
-    
+
         // Filtra los productos según la temporada seleccionada y carga la relación 'temporada'
         $products = Product::with('temporada')->where('idSeason', $seasonId)->get();
-    
+
 
         foreach ($products as $product) {
             if ($product->image) {
-              
+
                 $product->image = asset('storage/product/' . $product->image);
             }
         }
-    
+
         return response()->json($products);
     }
-    
 }
 
 
