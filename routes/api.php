@@ -28,7 +28,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 
 
-//RUTAS TEMPORADA
+//RUTAS TEMPORADA CRUD
 
 Route::post('/temporada/store', [SeasonController::class,'store'])->name('season.store');
 Route::get('temporada/create',[SeasonController::class,'create'])->name('season.create');
@@ -39,7 +39,7 @@ Route::put('/temporada/update/{season}',[SeasonController::class, 'update'])->na
 Route::get('/temporada/show/{season}',[SeasonController::class, 'show'])->name('season.show');
 
 
-//RUTAS ROL
+//RUTAS ROL 
 /* 
 Route::post('/rol/store', [RolController::class,'store'])->name('rol.store');
 Route::get('/rol/create',[RolController::class,'create'])->name('rol.create'); */
@@ -50,7 +50,7 @@ Route::put('/rol/update/{rol}',[RolController::class, 'update'])->name('rol.upda
 Route::get('/rol/show',[RolController::class, 'show'])->name('rol.show');
  */
 
-//RUTAS USUARIO
+//RUTAS USUARIO CRUD
 
 
 Route::post('/usuario/store',[UserController::class,'store'])->name('user.store');
@@ -61,14 +61,13 @@ Route::get('/usuario/edit/{id}',[UserController::class, 'edit'])->name('user.edi
 /* Route::put('/usuario/update/{user}',[UserController::class, 'update'])->name('update.crud'); */
 Route::get('/usuario/show',[UserController::class, 'show'])->name('user.show');
 
-Route::post('register', [AuthController::class,'register'])->name('register');
-Route::post('logins', [AuthController::class,'logins'])->name('logins');
 
 
 
 
 
-//RUTAS DE PRODUCTOS
+//RUTAS DE PRODUCTOS CRUD
+
 Route::post('/producto/store', [ProductController::class,'store'])->name('product.store');
 Route::get('/producto/create',[ProductController::class,'create'])->name('product.create');
 Route::get('productos',[ProductController::class,'index'])->name('product.index'); 
@@ -78,14 +77,17 @@ Route::put('/producto/update/{product}',[ProductController::class, 'update'])->n
 Route::get('/producto/show/{product}',[ProductController::class, 'show'])->name('product.show');
 
 
+//TEMPORADAS FILTRO
 
 
+Route::get('/producto/temporada/{seasonId}', [ProductController::class, 'productTemporada'])->name('temporadas');
 
 
+//AUTENTICACIONES
 
+Route::post('register', [AuthController::class,'register'])->name('register');
+Route::post('logins', [AuthController::class,'logins'])->name('logins');
 
-
-//AUTHENTICACIONES
 
  Route::middleware(['auth:sanctum'])->group(function(){
     Route::put('/usuario/update',[AuthController::class, 'updateProfile'])->name('user.update');
@@ -103,10 +105,5 @@ Route::get('/producto/show/{product}',[ProductController::class, 'show'])->name(
 
 
 
-//TEMPORADAS
 
 
-Route::get('/producto/primavera', [ProductController::class,'primavera'])->name('primavera');
-Route::get('/producto/verano', [ProductController::class,'verano'])->name('verano');
-Route::get('/producto/otoño', [ProductController::class,'otoño'])->name('otoño');
-Route::get('/producto/invierno', [ProductController::class,'invierno'])->name('invierno');
