@@ -71,13 +71,19 @@ class ProductController extends Controller
 
 
 
-    
     public function show(Product $product)
     {
+        // Verificar si la propiedad 'image' está presente y no es nula
+        if ($product->image) {
+            // Construir la URL completa para la imagen utilizando el helper asset
+            $product->image = asset('storage/product/' . $product->image);
+        }
+
+        // Responder con el producto modificado
         return response()->json($product, Response::HTTP_OK);
     }
  
-
+   
  
 
     public function update(Request $request, Product $product)

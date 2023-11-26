@@ -58,7 +58,7 @@ Route::get('/usuario/create',[UserController::class, 'create'])->name('user.crea
 Route::get('usuarios', [UserController::class, 'index'])->name('user.index');
 Route::delete('/usuario/destroy/{user}', [UserController::class, 'destroy'])->name('user.destroy');
 Route::get('/usuario/edit/{id}',[UserController::class, 'edit'])->name('user.edit');
-//Route::put('/usuario/update/{user}',[UserController::class, 'update'])->name('user.update');
+/* Route::put('/usuario/update/{user}',[UserController::class, 'update'])->name('update.crud'); */
 Route::get('/usuario/show',[UserController::class, 'show'])->name('user.show');
 
 Route::post('register', [AuthController::class,'register'])->name('register');
@@ -75,7 +75,7 @@ Route::get('productos',[ProductController::class,'index'])->name('product.index'
 Route::delete('/producto/destroy/{product}',[ProductController::class,'destroy'])->name('product.destroy');
 Route::get('/producto/edit/{id}',[ProductController::class, 'edit'])->name('product.edit');
 Route::put('/producto/update/{product}',[ProductController::class, 'update'])->name('product.update');
-Route::get('/producto/show',[ProductController::class, 'show'])->name('product.show');
+Route::get('/producto/show/{product}',[ProductController::class, 'show'])->name('product.show');
 
 
 
