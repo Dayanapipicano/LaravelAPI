@@ -129,7 +129,6 @@ class AuthController extends Controller
 
 
     //LOGICA QUE ACTUALIZA PERFIL
-
     public function updateProfile(Request $request)
     {
         $user = auth()->user();
@@ -143,8 +142,6 @@ class AuthController extends Controller
             'current_password' => 'sometimes|required|string|min:8',
             'new_password' => $request->filled('current_password') ? 'required|string|min:8|confirmed' : '',
         ]);
-        
-        
     
         if ($validator->fails()) {
             Log::error('Validation failed during profile update: ' . json_encode($validator->errors()));
@@ -156,10 +153,14 @@ class AuthController extends Controller
             if (!Hash::check($request->current_password, $user->password)) {
                 return response()->json(['message' => 'La contraseña actual no es válida.'], 422);
             }
-    
-            // Actualizar la contraseña si se proporciona una nueva
             if ($request->filled('new_password')) {
-                $user->update(['password' => Hash::make($request->new_password)]);
+                $user->update([
+                    'password' => Hash::make($request->new_password),
+                    'new_password_confirmation' => $request->new_password_confirmation,
+                ]);
+            
+                // Regenerar el token de autenticación
+                Auth::user()->tokens()->where('id', Auth::user()->currentAccessToken()->id)->update(['last_used_at' => now()]);
             }
         }
     
@@ -177,6 +178,7 @@ class AuthController extends Controller
     
         return response()->json(['message' => 'Perfil actualizado con éxito', 'user' => $user]);
     }
+    
 
     
     //TE MANDA LOS DATOS SOLO DEL USUSARIO CON EL QUE INICIO SESION

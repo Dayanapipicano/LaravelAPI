@@ -16,17 +16,17 @@ class ProductController extends Controller
 
     public function index()
     {
-        // Obtener la lista de productos con información relacionada
+    
         $products = Product::with('temporada')->get();
 
-        // Modificar la URL de la imagen para incluir el dominio
+      
         foreach ($products as $product) {
             if ($product->image) {
                 $product->image = asset('storage/product/' . $product->image);
             }
         }
 
-        // Devolver la respuesta con todos los datos, incluida la URL completa de la imagen
+
         return response()->json($products, Response::HTTP_OK);
     }
 
@@ -46,20 +46,20 @@ class ProductController extends Controller
             if ($request->hasFile('image')) {
                 $imageFile = $request->file('image');
 
-                // Generar un nombre de archivo único basado en la marca de tiempo y la extensión original
+               
                 $imageName = time() . '.' . $imageFile->getClientOriginalExtension();
 
 
                 $imageFile->storeAs('public/product', $imageName);
             }
 
-            // Crear el producto en la base de datos
+          
             $product = Product::create($request->except('image') + ['image' => $imageName]);
 
-            // Asignar el nombre del archivo al atributo 'image' del modelo de producto (para la respuesta JSON)
+         
             $product->image = $imageName;
 
-            // Devolver la respuesta con el nombre de la imagen asignado
+         
             return response()->json($product, Response::HTTP_CREATED);
         } catch (\Exception $e) {
 
@@ -73,13 +73,13 @@ class ProductController extends Controller
 
     public function show(Product $product)
     {
-        // Verificar si la propiedad 'image' está presente y no es nula
+        
         if ($product->image) {
-            // Construir la URL completa para la imagen utilizando el helper asset
+            
             $product->image = asset('storage/product/' . $product->image);
         }
 
-        // Responder con el producto modificado
+
         return response()->json($product, Response::HTTP_OK);
     }
 
@@ -111,10 +111,9 @@ class ProductController extends Controller
                 $product->image = $imageName;
             }
     
-            // Actualizar los demás campos del producto
+          
             $product->update($request->except('image'));
-    
-            // Devolver la respuesta con el producto actualizado
+   
             return response()->json($product, Response::HTTP_OK);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error al actualizar el producto.'], Response::HTTP_INTERNAL_SERVER_ERROR);
