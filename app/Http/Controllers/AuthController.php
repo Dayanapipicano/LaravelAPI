@@ -10,15 +10,15 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Log;
-
+use Illuminate\Support\Facades\Storage;
 use \stdClass;
 
 class AuthController extends Controller
 {
 
-      //------DEL LADO DEL CLIENTE-----
+    //------DEL LADO DEL CLIENTE-----
 
-      //REGISTRO DE USUSARIO 
+    //REGISTRO DE USUSARIO 
 
     public function register(Request $request)
     {
@@ -31,15 +31,18 @@ class AuthController extends Controller
             'document' => 'required|integer',
             'phone' => 'required|integer',
             'idRol' => 'nullable|integer',
+            'image' => 'image|mimes:jpeg,png,jpg',
+
+
         ]);
-    
+
         if ($validator->fails()) {
             // Log de errores de validación
             Log::error('Validation failed: ' . json_encode($validator->errors()));
             return response()->json($validator->errors());
         }
-    
-      
+
+
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
@@ -48,23 +51,24 @@ class AuthController extends Controller
             'typeDocument' => $request->typeDocument,
             'document' => $request->document,
             'phone' => $request->phone,
+            'image' => 'perfil.jpg',
         ]);
         $requestedRole = $request->idRol;
         $defaultRole = Role::findByName('cliente');
-    
+
         $roleToAssign = $requestedRole ? Role::find($requestedRole) : $defaultRole;
-    
+
         $user->assignRole($roleToAssign);
-    
+
         // Asigna permisos basados en el rol
         $permissions = $roleToAssign->permissions->pluck('name')->toArray();
         $user->givePermissionTo($permissions);
-    
+
         // Genera el token de acceso
         $token = $user->createToken('auth_token')->plainTextToken;
         // Log de éxito
         Log::info('User registered successfully: ' . json_encode($user));
-    
+
         return response()->json([
             'data' => $user,
             'access_token' => $token,
@@ -80,22 +84,22 @@ class AuthController extends Controller
         if (!Auth::attempt($request->only('email', 'password'))) {
             return response()->json(['message' => 'Unauthorized'], 401);
         }
-    
+
         $user = auth()->user();
-    
+
         // Cargar solo los nombres de los roles
         $user->load('roles:name');
-    
+
         // Asignar roles
         $userRoles = $user->roles->pluck('name')->toArray();
-    
+
         // Asignar permisos basados en los roles
         $permissions = Role::whereIn('name', $userRoles)->get()->flatMap->permissions->pluck('name')->toArray();
         $user->givePermissionTo($permissions);
-    
+
         // Crear el token con roles
         $token = $user->createToken('auth_token', ['roles' => $userRoles])->plainTextToken;
-    
+
         $response = [
             'message' => 'Hi ' . $user->name,
             'accessToken' => $token,
@@ -104,15 +108,15 @@ class AuthController extends Controller
             'roles' => $userRoles,
             'permissions' => $permissions,
         ];
-    
+
         // No redireccionar, solo responder con JSON
         return response()->json($response);
     }
-    
-    
+
+
 
     //CIERRE DE SESION
- 
+
 
     public function logout()
     {
@@ -125,14 +129,14 @@ class AuthController extends Controller
     }
 
 
-   
+
 
 
     //LOGICA QUE ACTUALIZA PERFIL
     public function updateProfile(Request $request)
     {
         $user = auth()->user();
-    
+
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'lastName' => 'required|string|max:255',
@@ -141,29 +145,43 @@ class AuthController extends Controller
             'phone' => 'required|integer',
             'current_password' => 'sometimes|required|string|min:8',
             'new_password' => $request->filled('current_password') ? 'required|string|min:8|confirmed' : '',
+            'image' => 'sometimes|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Agrega la validación para la imagen
         ]);
-    
+
         if ($validator->fails()) {
             Log::error('Validation failed during profile update: ' . json_encode($validator->errors()));
             return response()->json($validator->errors(), 422);
         }
-    
+
         // Verificar la contraseña actual si se proporciona
         if ($request->filled('current_password')) {
             if (!Hash::check($request->current_password, $user->password)) {
                 return response()->json(['message' => 'La contraseña actual no es válida.'], 422);
             }
+
             if ($request->filled('new_password')) {
                 $user->update([
                     'password' => Hash::make($request->new_password),
                     'new_password_confirmation' => $request->new_password_confirmation,
                 ]);
-            
+
                 // Regenerar el token de autenticación
                 Auth::user()->tokens()->where('id', Auth::user()->currentAccessToken()->id)->update(['last_used_at' => now()]);
             }
         }
-    
+
+       // Eliminar la imagen antigua si se proporciona una nueva
+       if ($request->hasFile('image')) {
+        // Usar public_path para generar la ruta completa
+        Storage::delete(public_path('product/' . $user->image));
+
+        $imageFile = $request->file('image');
+        $imageName = time() . '.' . $imageFile->getClientOriginalExtension();
+        $imageFile->storeAs('public/product', $imageName);
+
+        $user->image = $imageName;
+    }
+
         // Actualizar otros detalles del perfil
         $user->update([
             'name' => $request->name,
@@ -172,28 +190,30 @@ class AuthController extends Controller
             'document' => $request->document,
             'phone' => $request->phone,
         ]);
-    
+
         // Log de éxito
         Log::info('User profile updated successfully: ' . json_encode($user));
-    
+
         return response()->json(['message' => 'Perfil actualizado con éxito', 'user' => $user]);
     }
-    
 
-    
+
+
+
     //TE MANDA LOS DATOS SOLO DEL USUSARIO CON EL QUE INICIO SESION
     public function getPerfil()
     {
         $user = auth()->user();
         $token = $user->createToken('auth_token')->plainTextToken;
-    
-        // Log o imprime la información del usuario y el token para depuración
+
+        // Verificar y ajustar la URL completa de la imagen en el perfil
+        if ($user->image) {
+            $user->image = asset('storage/product/' . $user->image);
+        }
+
         Log::info('User profile information: ' . json_encode($user));
         Log::info('Token in getPerfil: ' . $token);
-    
+
         return response()->json(['user' => $user]);
     }
-    
-    
-    
 }
