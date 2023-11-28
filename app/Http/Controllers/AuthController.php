@@ -205,15 +205,16 @@ class AuthController extends Controller
     {
         $user = auth()->user();
         $token = $user->createToken('auth_token')->plainTextToken;
-
+    
         // Verificar y ajustar la URL completa de la imagen en el perfil
         if ($user->image) {
             $user->image = asset('storage/product/' . $user->image);
         }
-
+    
         Log::info('User profile information: ' . json_encode($user));
         Log::info('Token in getPerfil: ' . $token);
-
-        return response()->json(['user' => $user]);
+    
+        return response()->json(['token' => $token, 'user' => $user]);
     }
+    
 }
