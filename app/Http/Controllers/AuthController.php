@@ -189,6 +189,7 @@ class AuthController extends Controller
             'typeDocument' => $request->typeDocument,
             'document' => $request->document,
             'phone' => $request->phone,
+            'email' =>  $request->email,
         ]);
     
         // Cambiar la respuesta exitosa
