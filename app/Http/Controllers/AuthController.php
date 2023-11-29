@@ -217,7 +217,7 @@ class AuthController extends Controller
         Log::info('User profile information: ' . json_encode($user));
         Log::info('Token in getPerfil: ' . $token);
     
-        return response()->json(['token' => $token, 'user' => $user]);
+        return response()->json(['accessToken' => $token, 'user' => $user]);
     }
     
 }
