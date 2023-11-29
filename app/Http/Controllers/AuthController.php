@@ -144,18 +144,18 @@ class AuthController extends Controller
             'phone' => 'required|integer',
             'current_password' => 'sometimes|required|string|min:8',
             'new_password' => $request->filled('current_password') ? 'required|string|min:8|confirmed' : '',
-            'image' => 'sometimes|nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Ajuste para permitir que sea nulo
+            'image' => 'sometimes|nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
     
         if ($validator->fails()) {
-            Log::error('Validation failed during profile update: ' . json_encode($validator->errors()));
-            return response()->json($validator->errors(), 422);
+      
+            abort(422, $validator->errors());
         }
     
-        // Verificar la contraseña actual si se proporciona
         if ($request->filled('current_password')) {
             if (!Hash::check($request->current_password, $user->password)) {
-                return response()->json(['message' => 'La contraseña actual no es válida.'], 422);
+                
+                abort(422, ['message' => 'La contraseña actual no es válida.']);
             }
     
             if ($request->filled('new_password')) {
@@ -164,15 +164,13 @@ class AuthController extends Controller
                     'new_password_confirmation' => $request->new_password_confirmation,
                 ]);
     
-                // Regenerar el token de autenticación
                 Auth::user()->tokens()->where('id', Auth::user()->currentAccessToken()->id)->update(['last_used_at' => now()]);
             }
         }
     
-        // Eliminar la imagen antigua si se proporciona una nueva
         if ($request->hasFile('image')) {
-            // Usar public_path para generar la ruta completa
-            Storage::delete(public_path('product/' . $user->image));
+           
+            Storage::delete('public/product/' . $user->image);
     
             $imageFile = $request->file('image');
             $imageName = time() . '.' . $imageFile->getClientOriginalExtension();
@@ -180,12 +178,10 @@ class AuthController extends Controller
     
             $user->image = $imageName;
         } elseif ($request->input('image') === null) {
-            // Si el campo de imagen se proporciona como null, elimina la imagen existente
-            Storage::delete(public_path('product/' . $user->image));
+            Storage::delete('public/product/' . $user->image);
             $user->image = null;
         }
     
-        // Actualizar otros detalles del perfil
         $user->update([
             'name' => $request->name,
             'lastName' => $request->lastName,
@@ -194,11 +190,10 @@ class AuthController extends Controller
             'phone' => $request->phone,
         ]);
     
-        // Log de éxito
-        Log::info('User profile updated successfully: ' . json_encode($user));
-    
-        return response()->json(['message' => 'Perfil actualizado con éxito', 'user' => $user]);
+        // Cambiar la respuesta exitosa
+        return response()->json(['exitoso' => true, 'mensaje' => 'Perfil actualizado con éxito', 'user' => $user]);
     }
+    
     
 
 
