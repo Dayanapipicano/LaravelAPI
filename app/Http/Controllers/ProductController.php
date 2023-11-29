@@ -40,33 +40,29 @@ class ProductController extends Controller
             'concentration' => 'required|integer',
             'idSeason' => 'required|integer'
         ]);
-
+    
         try {
-
+            $imageName = null;
+    
             if ($request->hasFile('image')) {
                 $imageFile = $request->file('image');
-
-               
                 $imageName = time() . '.' . $imageFile->getClientOriginalExtension();
-
-
                 $imageFile->storeAs('public/product', $imageName);
             }
-
-          
-            $product = Product::create($request->except('image') + ['image' => $imageName]);
-
-         
-            $product->image = $imageName;
-
-         
+    
+            $productData = $request->except('image');
+            if ($imageName !== null) {
+                $productData['image'] = $imageName;
+            }
+    
+            $product = Product::create($productData);
+    
             return response()->json($product, Response::HTTP_CREATED);
         } catch (\Exception $e) {
-
             return response()->json(['error' => 'Error al guardar el producto.'], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
-
+    
 
 
 
@@ -85,7 +81,6 @@ class ProductController extends Controller
 
 
 
-
     public function update(Request $request, Product $product)
     {
         $request->validate([
@@ -98,30 +93,32 @@ class ProductController extends Controller
         ]);
     
         try {
-
-         
             // Eliminar la imagen antigua si se proporciona una nueva
             if ($request->hasFile('image')) {
-                Storage::delete('public/product/' . $product->image);
+                // Eliminar la imagen antigua solo si existe
+                if ($product->image) {
+                    Storage::delete('public/product/' . $product->image);
+                }
     
                 $imageFile = $request->file('image');
                 $imageName = time() . '.' . $imageFile->getClientOriginalExtension();
                 $imageFile->storeAs('public/product', $imageName);
     
                 $product->image = $imageName;
+            } elseif ($request->exists('remove_image') && $request->get('remove_image')) {
+                // Si se proporciona un campo remove_image y es true, elimina la imagen
+                Storage::delete('public/product/' . $product->image);
+                $product->image = null;
             }
     
-          
-            $product->update($request->except('image'));
-   
+            $product->update($request->except('image', 'remove_image'));
+    
             return response()->json($product, Response::HTTP_OK);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error al actualizar el producto.'], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
     
-
-
 
     public function edit($id)
     {
