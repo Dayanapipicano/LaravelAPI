@@ -108,7 +108,9 @@ class ProductController extends Controller
             } elseif ($request->exists('remove_image') && $request->get('remove_image')) {
                 // Si se proporciona un campo remove_image y es true, elimina la imagen
                 Storage::delete('public/product/' . $product->image);
-                $product->image = null;
+                $product->image = null; // Establecer la imagen como null
+            } elseif (!$request->hasFile('image') && !$product->image) {
+                $product->image = null; // Si no se proporciona una imagen y la imagen existente es null, establecerla como null
             }
     
             $product->update($request->except('image', 'remove_image'));
@@ -118,6 +120,7 @@ class ProductController extends Controller
             return response()->json(['error' => 'Error al actualizar el producto.'], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
+    
     
 
     public function edit($id)
