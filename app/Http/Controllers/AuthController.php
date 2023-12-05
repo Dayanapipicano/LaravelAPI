@@ -142,7 +142,7 @@ class AuthController extends Controller
             'typeDocument' => 'required|string|max:255',
             'document' => 'required|integer',
             'phone' => 'required|integer',
-            'email' => 'required|string|email|max:255|unique:users',
+        
             'current_password' => 'sometimes|required|string|min:8',
             'new_password' => $request->filled('current_password') ? 'required|string|min:8|confirmed' : '',
             'image' => 'sometimes|nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
