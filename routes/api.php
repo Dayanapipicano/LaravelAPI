@@ -78,7 +78,7 @@ Route::get('/usuario/show',[UserController::class, 'show'])->name('user.show');
 
 //RUTAS DE PRODUCTOS CRUD
 
-Route::post('producto/store', [ProductController::class,'store'])->name('product.store'); 
+Route::post('/producto/store', [ProductController::class,'store'])->name('product.store'); 
 Route::get('productos',[ProductController::class,'index'])->name('product.index'); 
 Route::delete('/producto/destroy/{product}',[ProductController::class,'destroy'])->name('product.destroy');
 Route::get('/producto/edit/{id}',[ProductController::class, 'edit'])->name('product.edit');
