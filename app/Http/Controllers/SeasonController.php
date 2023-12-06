@@ -58,18 +58,7 @@ class SeasonController extends Controller
         return response()->json(null, Response::HTTP_NO_CONTENT);
     }
 
-    protected function failedValidation(Request $request, $validator)
-    {
-        throw (new ValidationException($validator))
-            ->redirectTo($this->getValidationErrorsRedirect($request));
-    } 
-    
-
-    protected function getValidationErrorsRedirect(Request $request)
-    {
-        return url()->previous(); // Redireccionar a la página anterior en caso de error de validación
-    }
-
+  
 
 
 

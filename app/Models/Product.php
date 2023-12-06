@@ -23,9 +23,12 @@ class Product extends Model
     public function favoritos(){
         return $this->hasMany('App\Models\Favorite');
     }
-    public function shoppingCarts(){
-        return $this->hasMany('App\Models\ShoppingCart');
-    }
+   
+    public function shoppingCarts()
+{
+    return $this->hasMany('App\Models\ShoppingCart', 'idProduct');
+}
+
     public function image(){
         return $this->morphOne('App\Models\Image','images');
     }

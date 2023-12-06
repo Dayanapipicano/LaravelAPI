@@ -6,138 +6,126 @@ use App\Models\ShoppingCart;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\User;
+use Illuminate\Http\Response;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class ShoppingCartController extends Controller
 {
-    
+
+
+
     public function index()
     {
-        $userID = auth()->id();
-        $shoppingCart = ShoppingCart::where('idUser', $userID)->get();
-
-        
-        return view('shoppingCart.carrito', compact('shoppingCart'));
-    }
-
-    public function indexAdmin()
-    {
-        $shoppingCart = ShoppingCart::all();
-
+        $shoppingCarts = ShoppingCart::with(['user', 'product'])->get();
     
-        
-        return view('shoppingCart.index', compact('shoppingCart'));
+        foreach ($shoppingCarts as $shoppingCart) {
+            $product = $shoppingCart->product;
+    
+            if ($product->image) {
+                $product->image = asset('storage/product/' . $product->image);
+            }
+        }
+    
+        return response()->json($shoppingCarts, Response::HTTP_OK);
+    }
     
 
-        
-    }
 
-
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function agregarProducto(Request $request)
     {
-        $shoppingCart = new ShoppingCart();
-        $shoppingCart->product_quantity=$request->product_quantity;
-        $shoppingCart->idUser=$request->idUser;
-        $shoppingCart->idProduct=$request->idProduct;
-        $shoppingCart->save();
-
-
-        return Redirect()->route('shoppingCart.index',$shoppingCart);
+        $user = auth()->user();
+    
+        $request->validate([
+            'idProduct' => 'required|integer',
+            'product_quantity' => 'required|integer',
+        ]);
+    
+        try {
+            // Verificar si el producto ya está en el carrito
+            $existingCartItem = ShoppingCart::where('idUser', $user->id)
+                ->where('idProduct', $request->idProduct)
+                ->first();
+    
+            if ($existingCartItem) {
+                // Si ya existe, actualizar la cantidad
+                $existingCartItem->increment('product_quantity', $request->product_quantity);
+            } else {
+                // Si no existe, crear un nuevo registro en el carrito de compras
+                ShoppingCart::create([
+                    'idUser' => $user->id,
+                    'idProduct' => $request->idProduct,
+                    'product_quantity' => $request->product_quantity,
+                ]);
+            }
+    
+            // Obtener los detalles del producto recién agregado
+            $productDetails = Product::find($request->idProduct);
+    
+            return response()->json([
+                'message' => 'Producto agregado al carrito correctamente',
+                'product_details' => $productDetails,
+            ], Response::HTTP_OK);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Hubo un error al procesar la solicitud.'], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
-    public function create()
+    
+    
 
-    {
-        $users = User::all();
-        $products = Product::all();
-        return view('shoppingCart.create',['products'=> $products,'users'=> $users]);
 
-    }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\ShoppingCart  $shoppingCart
-     * @return \Illuminate\Http\Response
-     */
     public function show(ShoppingCart $shoppingCart)
     {
-        return view('shoppingCart.show');
+        return response()->json($shoppingCart, Response::HTTP_OK);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\ShoppingCart  $shoppingCart
-     * @return \Illuminate\Http\Response
-     */
+
+
+
     public function update(Request $request, ShoppingCart $shoppingCart)
     {
-        $shoppingCart->idUser = $request->idUser;
-        $shoppingCart->idProduct = $request->idProduct;
-        $shoppingCart->product_quantity = $request->product_quantity;
+        $request->validate([
+            'product_quantity' => 'required|integer',
+            'idUser' => 'required|integer',
+            'idProduct' => 'required|integer'
+        ]);
     
-        $shoppingCart->save();
-
-        /* return redirect()->route('carritoC', $shoppingCart); */
-        return redirect()->route('shoppingCart.index');
+        // Actualizar el carrito de compras
+        $shoppingCart->update($request->only(['idUser', 'idProduct', 'product_quantity']));
+    
+        // Cargar las relaciones actualizadas
+        $shoppingCart->load(['user', 'product']);
+    
+        return response()->json($shoppingCart, Response::HTTP_OK);
     }
+    
 
 
-    public function edit(ShoppingCart $shoppingCart){
-
-        $users = User::all();
-        $products = Product::all();
-
-        return view('shoppingCart.edit', compact('shoppingCart','users', 'products'));
 
 
-  
-       
-     }
+    public function edit(ShoppingCart $shoppingCart)
+    {
+        $shoppingCart->load(['user', 'product']);
+    
+        return response()->json([
+            'shoppingCart' => $shoppingCart,
+            'users' => User::all(),
+            'products' => Product::all(),
+        ], Response::HTTP_OK);
+    }
+    
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\ShoppingCart  $shoppingCart
-     * @return \Illuminate\Http\Response
-     */
+ 
+
+
     public function destroy(ShoppingCart $shoppingCart)
     {
+        $user = auth()->user();
         $shoppingCart->delete();
-
-        //Aqui debes de tener cuidado porque funciona para carrito de compra pero no te va a servir para la vista de eliminar para usuario
-        return redirect()->route('carritoC')->with('success', 'Producto actualizado correctamente');
+    
+        return response()->json(['message' => 'Carrito de compras eliminado correctamente'], Response::HTTP_OK);
     }
 
-    public function añadir(){
-        $id = $_POST['id_product'];
-        $product = Product::find($id);
-    
-        $cantidad  = $_POST['cantidad'];
-        $userID = auth()->id();
-    
-        $shoppingCart = new ShoppingCart();
-        $shoppingCart->product_quantity = $cantidad;
-        $shoppingCart->idUser = $userID;
-        $shoppingCart->idProduct = $id;
-        $shoppingCart->save();
-    
-        // Carga la información del producto para pasarlo a la vista
-        $product = Product::find($id);
-    
-        $shoppingCart = ShoppingCart::where('idUser', $userID)->get();
-    
-        // Pasa la información del producto a la vista
-        return view('shoppingCart.carrito', compact('shoppingCart', 'product'));
-    }
-    
     
 }

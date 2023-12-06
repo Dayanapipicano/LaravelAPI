@@ -15,13 +15,17 @@ class ShoppingCart extends Model
         'product_quantity',
     ];
 
-    public function user(){
-        return $this->belongsTo('App\Models\User');
+    public function user()
+    {
+        return $this->belongsTo('App\Models\User', 'idUser');
     }
-    public function product(){
-        return $this->belongsTo('App\Models\Product', 'idProduct', 'id');
+    
+    public function product()
+    {
+        return $this->belongsTo('App\Models\Product', 'idProduct');
     }
     public function pedido(){
-        return $this->hasOne('App\Models\Order');
+        return $this->hasOne('App\Models\Order', 'idShoppingCart');
     }
+    
 }

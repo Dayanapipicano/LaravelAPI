@@ -46,8 +46,9 @@ class User extends Authenticatable
 
     public function shoppingCarts()
     {
-        return $this->hasMany(ShoppingCart::class);
+        return $this->hasMany('App\Models\ShoppingCart', 'idUser');
     }
+    
 
     public function pqrs()
     {

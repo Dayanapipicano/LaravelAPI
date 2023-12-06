@@ -6,6 +6,7 @@ use App\Http\Controllers\RolController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SeasonController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ShoppingCartController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Laravel\Sanctum\Http\Controllers\AuthenticatedSessionController;
@@ -31,12 +32,22 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //RUTAS TEMPORADA CRUD
 
 Route::post('/temporada/store', [SeasonController::class,'store'])->name('season.store');
-Route::get('temporada/create',[SeasonController::class,'create'])->name('season.create');
 Route::get('/temporadas', [SeasonController::class, 'index'])->name('seasons.index');
 Route::delete('/temporada/destroy/{season}', [SeasonController::class, 'destroy'])->name('season.destroy');
 Route::get('/temporada/edit/{season}',[SeasonController::class, 'edit'])->name('season.edit');
 Route::put('/temporada/update/{season}',[SeasonController::class, 'update'])->name('season.update');
 Route::get('/temporada/show/{season}',[SeasonController::class, 'show'])->name('season.show');
+
+
+
+//RUTAS DE CARRITO DE COMPRAS CRUD
+Route::post('/carritoDeCompra/agregar', [ShoppingCartController::class, 'agregarProducto'])->name('shoppingCart.agregar');
+Route::post('/carritoDeCompra/store', [ShoppingCartController::class, 'store'])->name('shoppingCart.store');
+Route::get('/carritoDeCompras', [ShoppingCartController::class, 'index'])->name('shoppingCart.index');
+Route::get('/carritoDeCompra/edit/{shoppingCart}', [ShoppingCartController::class, 'edit'])->name('shoppingCart.edit');
+Route::put('/carritoDeCompra/update/{shoppingCart}', [ShoppingCartController::class, 'update'])->name('shoppingCart.update');
+Route::get('/carritoDeCompra/show/{shoppingCart}', [ShoppingCartController::class, 'show'])->name('shoppingCart.show');
+
 
 
 //RUTAS ROL 
@@ -65,11 +76,9 @@ Route::get('/usuario/show',[UserController::class, 'show'])->name('user.show');
 
 
 
-
 //RUTAS DE PRODUCTOS CRUD
 
-Route::post('/producto/store', [ProductController::class,'store'])->name('product.store');
-Route::get('/producto/create',[ProductController::class,'create'])->name('product.create');
+Route::post('/producto/store', [ProductController::class,'store'])->name('product.store'); 
 Route::get('productos',[ProductController::class,'index'])->name('product.index'); 
 Route::delete('/producto/destroy/{product}',[ProductController::class,'destroy'])->name('product.destroy');
 Route::get('/producto/edit/{id}',[ProductController::class, 'edit'])->name('product.edit');
@@ -92,7 +101,10 @@ Route::post('logins', [AuthController::class,'logins'])->name('logins');
  Route::middleware(['auth:sanctum'])->group(function(){
     Route::post('/usuario/update',[AuthController::class, 'updateProfile'])->name('user.update');
     Route::get('perfil', [AuthController::class,'getPerfil'])->name('perfil');
+    Route::post('/carritoDeCompra/agregarProducto', [ShoppingCartController::class, 'agregarProducto'])->name('carrito.agregarProducto');
+    Route::delete('/carritoDeCompra/destroy/{shoppingCart}', [ShoppingCartController::class, 'destroy'])->name('shoppingCart.destroy');
     Route::get('logout', [AuthController::class,'logout'])->name('logout');
+   
  
      
 }); 
