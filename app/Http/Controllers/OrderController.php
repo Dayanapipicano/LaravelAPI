@@ -17,7 +17,7 @@ class OrderController extends Controller
     {
         $order = Order::with([
             'shoppingCart' => function ($query) {
-                $query->with(['user', 'product']); // Agregar las relaciones deseadas en el carrito de compras
+                $query->with(['user', 'product']); 
             },
             'typePay'
         ])->get();
@@ -42,8 +42,16 @@ class OrderController extends Controller
 
     public function show(Order $order)
     {
+        $order = $order->load([
+            'shoppingCart' => function ($query) {
+                $query->with(['user', 'product']);
+            },
+            'typePay'
+        ]);
+    
         return response()->json($order, Response::HTTP_OK);
     }
+    
 
 
     public function destroy(Order $order)
