@@ -56,10 +56,13 @@ class OrderController extends Controller
 
     public function destroy(Order $order)
     {
+
+        $user = auth()->user();
         $order->delete();
 
         return response()->json(null, Response::HTTP_NO_CONTENT);
     }
 
 
+  
 }

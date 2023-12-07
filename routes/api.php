@@ -45,7 +45,6 @@ Route::get('/temporada/show/{season}',[SeasonController::class, 'show'])->name('
 
 Route::post('/pedido/store', [OrderController::class,'store'])->name('order.store');
 Route::get('/pedidos', [OrderController::class, 'index'])->name('order.index');
-Route::delete('/pedido/destroy/{order}', [OrderController::class, 'destroy'])->name('order.destroy');
 Route::get('/pedido/edit/{order}',[OrderController::class, 'edit'])->name('order.edit');
 Route::put('/pedido/update/{order}',[OrderController::class, 'update'])->name('order.update');
 Route::get('/pedido/show/{order}',[OrderController::class, 'show'])->name('order.show');
@@ -127,6 +126,7 @@ Route::post('logins', [AuthController::class,'logins'])->name('logins');
     Route::get('perfil', [AuthController::class,'getPerfil'])->name('perfil');
     Route::post('/carritoDeCompra/agregarProducto', [ShoppingCartController::class, 'agregarProducto'])->name('carrito.agregarProducto');
     Route::delete('/carritoDeCompra/destroy/{shoppingCart}', [ShoppingCartController::class, 'destroy'])->name('shoppingCart.destroy');
+    Route::delete('/pedido/destroy/{order}', [OrderController::class, 'destroy'])->name('order.destroy');
     Route::get('logout', [AuthController::class,'logout'])->name('logout');
    
  
