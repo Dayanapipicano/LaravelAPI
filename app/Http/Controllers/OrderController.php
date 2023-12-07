@@ -16,7 +16,7 @@ class OrderController extends Controller
     public function index()
     {
     
-        $order = Order::with(['order', 'typePay'])->get();
+        $order = Order::with(['shoppingCart', 'typePay'])->get();
 
         return response()->json($order, Response::HTTP_OK);
     }
