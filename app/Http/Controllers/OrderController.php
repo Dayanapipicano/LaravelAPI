@@ -6,91 +6,48 @@ use App\Models\Order;
 use App\Http\Controllers\Controller;
 use App\Models\ShoppingCart;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class OrderController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
+
+    //ESTE SERIA PARA ADMIN
     public function index()
     {
-        $order = Order::all();
+    
+        $order = Order::with(['order', 'typePay'])->get();
 
-        return view('order.index',compact('order'));
-    }
-    public function create(){
-        $shoppingCarts = ShoppingCart::all();
-       
-        return view('order.create',['shoppingCarts'=> $shoppingCarts]);
+        return response()->json($order, Response::HTTP_OK);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+
+    
     public function store(Request $request)
     {
+        $request->validate([
+            'idShoppingCart' => 'required|integer',
+            'idTypePay' => 'required|integer',
+        ]);
+    
+        $order = Order::create($request->all());
 
-        $order= new Order();
-        $order->dateOrder=$request->dateOrder;
-        $order->idShoppingCart=$request->idShoppingCart;
-
-        $order->save();
-
-        return Redirect()->route('order.index',$order);
-
+        return response()->json($order, Response::HTTP_CREATED);
     }
+    
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Order  $order
-     * @return \Illuminate\Http\Response
-     */
     public function show(Order $order)
     {
-        return view('order.show');
+        return response()->json($order, Response::HTTP_OK);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Order  $order
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Order $order)
-    {
-        
-        $order->dateOrder=$request->dateOrder;
-        $order->idShoppingCart=$request->idShoppingCart;
 
-        $order->save();
-
-        return Redirect()->route('order.index',$order);
-    }
-
-    public function edit(Order $order){
-
-        $shoppingCarts = ShoppingCart::all();
-
-        return view('order.edit', compact('order', 'shoppingCarts'));
-
-       
-     }
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Order  $order
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Order $order)
     {
         $order->delete();
-        return back()->with('succes','Registro eliminado correctamente');
+
+        return response()->json(null, Response::HTTP_NO_CONTENT);
     }
+
+
 }

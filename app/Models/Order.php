@@ -7,11 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class Order extends Model
 {
+
+    protected $fillable = ['idShoppingCart', 'idTypePay'];
+
     use HasFactory;
     public function shoppingCart(){
         return $this->belongsTo('App\Models\ShoppingCart');
     }
-    public function Pago(){
+    public function typePay(){
         return $this->belongsTo('App\Models\Pay');
     }
     public function devolucion(){
@@ -20,4 +23,7 @@ class Order extends Model
     public function notificacions(){
         return $this->hasMany('App\Models\NotificationOrder');
     }
+
+
+
 }

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RolController;
 use App\Http\Controllers\RoleController;
@@ -38,6 +39,17 @@ Route::delete('/temporada/destroy/{season}', [SeasonController::class, 'destroy'
 Route::get('/temporada/edit/{season}',[SeasonController::class, 'edit'])->name('season.edit');
 Route::put('/temporada/update/{season}',[SeasonController::class, 'update'])->name('season.update');
 Route::get('/temporada/show/{season}',[SeasonController::class, 'show'])->name('season.show');
+
+
+//RUTAS PEDIDO
+
+Route::post('/pedido/store', [OrderController::class,'store'])->name('order.store');
+Route::get('/pedidos', [OrderController::class, 'index'])->name('order.index');
+Route::delete('/pedido/destroy/{order}', [OrderController::class, 'destroy'])->name('order.destroy');
+Route::get('/pedido/edit/{order}',[OrderController::class, 'edit'])->name('order.edit');
+Route::put('/pedido/update/{order}',[OrderController::class, 'update'])->name('order.update');
+Route::get('/pedido/show/{order}',[OrderController::class, 'show'])->name('order.show');
+
 
 
 

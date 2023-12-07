@@ -24,8 +24,10 @@ class ShoppingCart extends Model
     {
         return $this->belongsTo('App\Models\Product', 'idProduct');
     }
-    public function pedido(){
+    public function order(){
         return $this->hasOne('App\Models\Order', 'idShoppingCart');
     }
+
+  
     
 }

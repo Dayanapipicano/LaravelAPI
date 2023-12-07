@@ -11,8 +11,13 @@ class TypePay extends Model
     
     protected $fillable = ['name'];
 
-    public function pago()
+  /*   public function pago()
     {
         return $this->belongsTo('App\Models\Pay');
+    } */
+
+    public function order()
+    {
+        return $this->hasOne('App\Models\Order', 'idTypePay');
     }
 }
