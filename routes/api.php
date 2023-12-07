@@ -41,7 +41,7 @@ Route::put('/temporada/update/{season}',[SeasonController::class, 'update'])->na
 Route::get('/temporada/show/{season}',[SeasonController::class, 'show'])->name('season.show');
 
 
-//RUTAS PEDIDO
+//RUTAS PEDIDO CRUD
 
 Route::post('/pedido/store', [OrderController::class,'store'])->name('order.store');
 Route::get('/pedidos', [OrderController::class, 'index'])->name('order.index');
