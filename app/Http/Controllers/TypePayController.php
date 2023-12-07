@@ -5,79 +5,55 @@ namespace App\Http\Controllers;
 use App\Models\TypePay;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-
+use Illuminate\Http\Response;
 class TypePayController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+     
     public function index()
     {
-        $typePay = TypePay::all();
+        $typepay = TypePay::all(); 
+        return response()->json($typepay, Response::HTTP_OK);
+    }
 
-        return view('typePay.index', compact('typePay'));
-    }
-    public function create(){
-        return view('typePay.create');
-    }
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
-        $formaDePago = new TypePay();
-        $formaDePago->name=$request->name;
-        $formaDePago->save();
+        $request->validate([
+            'name' => 'required|max:255',
 
+        ]);
 
-        return Redirect()->route('typePay.index',$formaDePago);
+        $typepay = TypePay::create($request->all());
+
+        return response()->json($typepay, Response::HTTP_CREATED);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\TypePay  $typePay
-     * @return \Illuminate\Http\Response
-     */
-    public function show(TypePay $typePay)
+    public function show(TypePay $typepay)
     {
-        return view('typePay.show');
+        return response()->json($typepay, Response::HTTP_OK);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\TypePay  $typePay
-     * @return \Illuminate\Http\Response
-     */
-
-     public function edit(TypePay $typePay){
-        return view('typePay.edit',compact('typePay'));
-     }
-    public function update(Request $request, TypePay $typePay)
+    public function update(Request $request, TypePay $typepay)
     {
-        $typePay->name = $request->name;
+        $request->validate([
+            'name' => 'required|max:255',
+        ]);
 
-        $typePay->save();
+        $typepay->update($request->all());
 
-        return redirect()->route('typePay.index', $typePay);
+        return response()->json($typepay, Response::HTTP_OK);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\TypePay  $typePay
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(TypePay $typePay)
+
+    public function edit(TypePay $typepay)
+{
+    return response()->json($typepay, Response::HTTP_OK);
+}
+
+    public function destroy(TypePay $typepay)
     {
-        $typePay->delete();
-        return back()->with('succes','Registro eliminado correctamente');
+        $typepay->delete();
+
+        return response()->json(null, Response::HTTP_NO_CONTENT);
     }
+
 }

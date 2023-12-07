@@ -7,6 +7,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SeasonController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ShoppingCartController;
+use App\Http\Controllers\TypePayController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Laravel\Sanctum\Http\Controllers\AuthenticatedSessionController;
@@ -37,6 +38,17 @@ Route::delete('/temporada/destroy/{season}', [SeasonController::class, 'destroy'
 Route::get('/temporada/edit/{season}',[SeasonController::class, 'edit'])->name('season.edit');
 Route::put('/temporada/update/{season}',[SeasonController::class, 'update'])->name('season.update');
 Route::get('/temporada/show/{season}',[SeasonController::class, 'show'])->name('season.show');
+
+
+
+//RUTAS FORMA DE PAGO CRUD
+
+Route::post('/formaDePago/store', [TypePayController::class,'store'])->name('typepay.store');
+Route::get('/formaDePagos', [TypePayController::class, 'index'])->name('typepay.index');
+Route::delete('/formaDePago/destroy/{typepay}', [TypePayController::class, 'destroy'])->name('typepay.destroy');
+Route::get('/formaDePago/edit/{typepay}',[TypePayController::class, 'edit'])->name('typepay.edit');
+Route::put('/formaDePago/update/{typepay}',[TypePayController::class, 'update'])->name('typepay.update');
+Route::get('/formaDePago/show/{typepay}',[TypePayController::class, 'show'])->name('typepay.show');
 
 
 
