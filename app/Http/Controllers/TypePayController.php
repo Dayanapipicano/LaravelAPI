@@ -14,18 +14,17 @@ class TypePayController extends Controller
         $typepay = TypePay::all(); 
         return response()->json($typepay, Response::HTTP_OK);
     }
-
     public function store(Request $request)
     {
         $request->validate([
             'name' => 'required|max:255',
-
         ]);
-
-        $typepay = TypePay::create($request->all());
-
+    
+        $typepay = TypePay::create(['name' => $request->name]);
+    
         return response()->json($typepay, Response::HTTP_CREATED);
     }
+    
 
     public function show(TypePay $typepay)
     {

@@ -8,7 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class TypePay extends Model
 {
     use HasFactory;
-    public function pago(){
+    
+    protected $fillable = ['name'];
+
+    public function pago()
+    {
         return $this->belongsTo('App\Models\Pay');
     }
 }
