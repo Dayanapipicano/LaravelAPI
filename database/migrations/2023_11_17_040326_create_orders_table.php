@@ -19,7 +19,7 @@ class CreateOrdersTable extends Migration
             $table->unsignedBigInteger("idShoppingCart")->nullable();
             $table->foreign("idShoppingCart")->references("id")->on("type_pays")->onDelete("cascade");
             $table->unsignedBigInteger("idTypePay")->nullable();
-            $table->foreign("idTypePay")->references("id")->on("")->onDelete("cascade");
+            $table->foreign("idTypePay")->references("id")->on("type_pays")->onDelete("cascade");
             
             $table->timestamps();
         });
