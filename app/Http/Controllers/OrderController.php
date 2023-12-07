@@ -15,12 +15,16 @@ class OrderController extends Controller
     //ESTE SERIA PARA ADMIN
     public function index()
     {
+        $order = Order::with([
+            'shoppingCart' => function ($query) {
+                $query->with(['user', 'product']); // Agregar las relaciones deseadas en el carrito de compras
+            },
+            'typePay'
+        ])->get();
     
-        $order = Order::with(['shoppingCart', 'typePay'])->get();
-
         return response()->json($order, Response::HTTP_OK);
     }
-
+    
 
     
     public function store(Request $request)
